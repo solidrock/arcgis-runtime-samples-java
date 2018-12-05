@@ -84,26 +84,30 @@ public class RealisticEnvironmentEffectSample extends Application {
       scene.setBaseSurface(surface);
 
       // add a scene layer
-      final String buildings = "http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Boston/SceneServer/layers/0";
+      // final String buildings = "http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Boston/SceneServer/layers/0";
+      final String buildings = "http://tiles.arcgis.com/tiles/P3ePLMYs2RVChkJx/arcgis/rest/services/Buildings_Brest/SceneServer/layers/0";
       ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(buildings);
       scene.getOperationalLayers().add(sceneLayer);
 
 
       // add a camera and initial camera position
-      Camera camera = new Camera(42.351984, -71.073553, 150.0, 70, 80, 0.0);
+      // for Boston Camera camera = new Camera(42.351984, -71.073553, 150.0, 70, 80, 0.0);
+      Camera camera = new Camera(48.37, -4.50, 1000.0, 10.0, 70, 0.0);
+
       sceneView.setViewpointCamera(camera);
 
       // set atmosphere effect to realistic
-      sceneView.setAtmosphereEffect(AtmosphereEffect.REALISTIC);
+      //sceneView.setAtmosphereEffect(AtmosphereEffect.REALISTIC);
 
       // set the calendar to show shadows in the morning in Boston
 
-      TimeZone timeZone = TimeZone.getTimeZone("EST");
+      //TimeZone timeZone = TimeZone.getTimeZone("EST");
 //
 //
       Calendar calendar = new GregorianCalendar();
-      calendar.setTimeZone(timeZone);
-      calendar.set(2018, 6, 30, 15, 44);
+//      calendar.setTimeZone(timeZone);
+      // for boston calendar.set(2018, 6, 30, 15, 44);
+      calendar.set(2018, 6, 30, 12, 00);
 //
       System.out.println("The time is " + calendar.getTime());
       sceneView.setSunTime(calendar);
@@ -129,8 +133,19 @@ public class RealisticEnvironmentEffectSample extends Application {
       sunOnlyButton.setOnAction(event -> sceneView.setSunLighting(LightingMode.LIGHT));
       sunAndShadowsButton.setOnAction(event -> sceneView.setSunLighting(LightingMode.LIGHT_AND_SHADOWS));
 
+      Button noAtmosphereButton = new Button("No Atmosphere Effect");
+      Button realisticAtmosphereButton = new Button ("Realistic Atmosphere Effect");
+      Button horizonAtmosphereButton = new Button ("Horizon Only Atmosphere Effect");
+      noAtmosphereButton.setMaxWidth(Double.MAX_VALUE);
+      realisticAtmosphereButton.setMaxWidth(Double.MAX_VALUE);
+      horizonAtmosphereButton.setMaxWidth(Double.MAX_VALUE);
+
+      noAtmosphereButton.setOnAction(event -> sceneView.setAtmosphereEffect(AtmosphereEffect.NONE));
+      realisticAtmosphereButton.setOnAction(event -> sceneView.setAtmosphereEffect(AtmosphereEffect.REALISTIC));
+      horizonAtmosphereButton.setOnAction(event -> sceneView.setAtmosphereEffect(AtmosphereEffect.HORIZON_ONLY));
+
       // add buttons to the control panel
-      controlsVBox.getChildren().addAll(noSunButton, sunOnlyButton, sunAndShadowsButton);
+      controlsVBox.getChildren().addAll(noSunButton, sunOnlyButton, sunAndShadowsButton, noAtmosphereButton, realisticAtmosphereButton, horizonAtmosphereButton);
 
       // add scene view and control panel to the stack pane
       stackPane.getChildren().addAll(sceneView, controlsVBox);
