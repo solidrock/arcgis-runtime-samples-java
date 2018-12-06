@@ -26,6 +26,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -45,13 +46,13 @@ import com.esri.arcgisruntime.mapping.view.Camera;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.TimeZone;
 import java.util.concurrent.ExecutionException;
 
 public class RealisticEnvironmentEffectSample extends Application {
 
   private SceneView sceneView;
+  private Label time;
+  private Slider timeSlider;
 
   @Override
   public void start(Stage stage) {
@@ -100,20 +101,33 @@ public class RealisticEnvironmentEffectSample extends Application {
       // set atmosphere effect to realistic
       sceneView.setAtmosphereEffect(AtmosphereEffect.REALISTIC);
 
-      // set the calendar to show shadows in the morning in Boston
 
-      //TimeZone timeZone = TimeZone.getTimeZone("EST");
-//
-//
+
       Calendar calendar = new GregorianCalendar();
-//      calendar.setTimeZone(timeZone);
-      // for boston calendar.set(2018, 6, 30, 15, 44);
+      calendar.set(Calendar.HOUR_OF_DAY, 11);
+      System.out.println(calendar.getTime());
 
-      // set calendar for daylight early-afternoon in autumn
-      calendar.set(2018, 8, 30, 13, 00);
 //
-      System.out.println("The time is " + calendar.getTime());
-      sceneView.setSunTime(calendar);
+      time = new Label(calendar.getTime().toString());
+
+      timeSlider = new Slider();
+      timeSlider.setMax(24);
+      timeSlider.setShowTickMarks(true);
+      timeSlider.setMajorTickUnit(1);
+      timeSlider.setMinorTickCount(0);
+      timeSlider.setShowTickLabels(true);
+
+
+
+//       set light of the scene to the time value the user selected
+      timeSlider.valueChangingProperty().addListener(o -> {
+
+        Double sliderValue = timeSlider.getValue();
+        Integer asSliderInt = sliderValue.intValue();
+        calendar.set(Calendar.HOUR_OF_DAY, asSliderInt);
+        sceneView.setSunTime(calendar);
+      });
+
 
 
       // create a control panel
@@ -136,12 +150,9 @@ public class RealisticEnvironmentEffectSample extends Application {
       sunOnlyButton.setOnAction(event -> sceneView.setSunLighting(LightingMode.LIGHT));
       sunAndShadowsButton.setOnAction(event -> sceneView.setSunLighting(LightingMode.LIGHT_AND_SHADOWS));
 
-      Slider slider = new Slider();
-
-
 
       // add buttons to the control panel
-      controlsVBox.getChildren().addAll(noSunButton, sunOnlyButton, sunAndShadowsButton);
+      controlsVBox.getChildren().addAll(time, noSunButton, sunOnlyButton, sunAndShadowsButton, timeSlider);
 
       // add scene view and control panel to the stack pane
       stackPane.getChildren().addAll(sceneView, controlsVBox);
