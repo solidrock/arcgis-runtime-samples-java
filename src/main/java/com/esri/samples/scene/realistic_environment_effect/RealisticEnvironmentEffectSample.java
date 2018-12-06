@@ -26,6 +26,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
@@ -97,7 +98,7 @@ public class RealisticEnvironmentEffectSample extends Application {
       sceneView.setViewpointCamera(camera);
 
       // set atmosphere effect to realistic
-      //sceneView.setAtmosphereEffect(AtmosphereEffect.REALISTIC);
+      sceneView.setAtmosphereEffect(AtmosphereEffect.REALISTIC);
 
       // set the calendar to show shadows in the morning in Boston
 
@@ -107,7 +108,9 @@ public class RealisticEnvironmentEffectSample extends Application {
       Calendar calendar = new GregorianCalendar();
 //      calendar.setTimeZone(timeZone);
       // for boston calendar.set(2018, 6, 30, 15, 44);
-      calendar.set(2018, 6, 30, 12, 00);
+
+      // set calendar for daylight early-afternoon in autumn
+      calendar.set(2018, 8, 30, 13, 00);
 //
       System.out.println("The time is " + calendar.getTime());
       sceneView.setSunTime(calendar);
@@ -133,19 +136,12 @@ public class RealisticEnvironmentEffectSample extends Application {
       sunOnlyButton.setOnAction(event -> sceneView.setSunLighting(LightingMode.LIGHT));
       sunAndShadowsButton.setOnAction(event -> sceneView.setSunLighting(LightingMode.LIGHT_AND_SHADOWS));
 
-      Button noAtmosphereButton = new Button("No Atmosphere Effect");
-      Button realisticAtmosphereButton = new Button ("Realistic Atmosphere Effect");
-      Button horizonAtmosphereButton = new Button ("Horizon Only Atmosphere Effect");
-      noAtmosphereButton.setMaxWidth(Double.MAX_VALUE);
-      realisticAtmosphereButton.setMaxWidth(Double.MAX_VALUE);
-      horizonAtmosphereButton.setMaxWidth(Double.MAX_VALUE);
+      Slider slider = new Slider();
 
-      noAtmosphereButton.setOnAction(event -> sceneView.setAtmosphereEffect(AtmosphereEffect.NONE));
-      realisticAtmosphereButton.setOnAction(event -> sceneView.setAtmosphereEffect(AtmosphereEffect.REALISTIC));
-      horizonAtmosphereButton.setOnAction(event -> sceneView.setAtmosphereEffect(AtmosphereEffect.HORIZON_ONLY));
+
 
       // add buttons to the control panel
-      controlsVBox.getChildren().addAll(noSunButton, sunOnlyButton, sunAndShadowsButton, noAtmosphereButton, realisticAtmosphereButton, horizonAtmosphereButton);
+      controlsVBox.getChildren().addAll(noSunButton, sunOnlyButton, sunAndShadowsButton);
 
       // add scene view and control panel to the stack pane
       stackPane.getChildren().addAll(sceneView, controlsVBox);
