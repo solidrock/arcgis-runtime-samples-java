@@ -103,7 +103,7 @@ public class RealisticEnvironmentEffectSample extends Application {
 
 
 
-      Calendar calendar = new GregorianCalendar();
+      Calendar calendar = new GregorianCalendar(2018, 7, 10);
       calendar.set(Calendar.HOUR_OF_DAY, 11);
       System.out.println(calendar.getTime());
 
@@ -111,21 +111,29 @@ public class RealisticEnvironmentEffectSample extends Application {
       time = new Label(calendar.getTime().toString());
 
       timeSlider = new Slider();
-      timeSlider.setMax(24);
+      timeSlider.setMax(15);
       timeSlider.setShowTickMarks(true);
       timeSlider.setMajorTickUnit(1);
       timeSlider.setMinorTickCount(0);
       timeSlider.setShowTickLabels(true);
+      timeSlider.set
 
 
 
 //       set light of the scene to the time value the user selected
       timeSlider.valueChangingProperty().addListener(o -> {
 
-        Double sliderValue = timeSlider.getValue();
-        Integer asSliderInt = sliderValue.intValue();
-        calendar.set(Calendar.HOUR_OF_DAY, asSliderInt);
-        sceneView.setSunTime(calendar);
+        if (!timeSlider.isValueChanging()) {
+          Double sliderValue = timeSlider.getValue();
+          Integer asSliderInt = sliderValue.intValue();
+          calendar.set(Calendar.HOUR_OF_DAY, asSliderInt);
+
+          sceneView.setSunTime(calendar);
+
+          System.out.println("listening");
+          System.out.println(calendar.getTime());
+        }
+
       });
 
 
