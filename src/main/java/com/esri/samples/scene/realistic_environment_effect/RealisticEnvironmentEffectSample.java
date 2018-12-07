@@ -20,7 +20,10 @@ import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
 import com.esri.arcgisruntime.mapping.view.LightingMode;
+import com.sun.xml.internal.bind.v2.TODO;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
@@ -43,7 +46,9 @@ import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.AtmosphereEffect;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.mapping.view.Camera;
+import javafx.util.StringConverter;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.ExecutionException;
@@ -80,7 +85,7 @@ public class RealisticEnvironmentEffectSample extends Application {
 
       // add base surface for elevation data
       Surface surface = new Surface();
-      ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource( "http://elevation3d.arcgis" +
+      ArcGISTiledElevationSource elevationSource = new ArcGISTiledElevationSource("http://elevation3d.arcgis" +
               ".com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer");
       surface.getElevationSources().add(elevationSource);
       scene.setBaseSurface(surface);
@@ -91,51 +96,106 @@ public class RealisticEnvironmentEffectSample extends Application {
       ArcGISSceneLayer sceneLayer = new ArcGISSceneLayer(buildings);
       scene.getOperationalLayers().add(sceneLayer);
 
-
       // add a camera and initial camera position
       // for Boston Camera camera = new Camera(42.351984, -71.073553, 150.0, 70, 80, 0.0);
       Camera camera = new Camera(48.37, -4.50, 1000.0, 10.0, 70, 0.0);
-
       sceneView.setViewpointCamera(camera);
 
       // set atmosphere effect to realistic
       sceneView.setAtmosphereEffect(AtmosphereEffect.REALISTIC);
+      // set a new calendar and add a date and time
+      Calendar calendar = new GregorianCalendar(2018, 7, 10, 12, 00, 0);
 
+      String dateAndTime = calendar.getTime().toString();
+      // tidy string to just return date and time
+      String dateAndTimeTidied = dateAndTime.substring(0, 19);
+      time = new Label(dateAndTimeTidied);
 
-
-      Calendar calendar = new GregorianCalendar(2018, 7, 10);
-      calendar.set(Calendar.HOUR_OF_DAY, 11);
-      System.out.println(calendar.getTime());
-
-//
-      time = new Label(calendar.getTime().toString());
-
+      // initiate slider
       timeSlider = new Slider();
-      timeSlider.setMax(15);
+      // set maximum of 24 ticks (to  match 24 hr clock)
+      timeSlider.setMax(24);
+      // show tick marks for time slider
       timeSlider.setShowTickMarks(true);
-      timeSlider.setMajorTickUnit(1);
-      timeSlider.setMinorTickCount(0);
+      // start slider at 1200
+      timeSlider.setValue(12);
+      // set slider to display a label for every 4 hours
+      timeSlider.setMajorTickUnit(4);
+      timeSlider.setMinorTickCount(60);
       timeSlider.setShowTickLabels(true);
-      timeSlider.set
 
+      // set the slider to display tick labels as time strings
+      timeSlider.setLabelFormatter(new StringConverter<Double>() {
+
+        @Override
+        public String toString(Double object) {
+
+          if (object == 4) return "4am";
+          if (object == 8) return "8am";
+          if (object == 12) return "Midday";
+          if (object == 16) return "4pm";
+          if (object == 20) return "8pm";
+
+          return "Midnight";
+        }
+
+        @Override
+        public Double fromString(String string) {
+          return null;
+        }
+      });
+
+
+      // when the slider changes, update the hour of the day based on the value of the slider
+      timeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+
+                Double timeFromSlider = timeSlider.getValue();
+                String timeAsString = timeFromSlider.toString();
+                String subString = timeAsString.substring(3, 5);
+                System.out.println("Sub string" + subString);
+                int minutes = Integer.valueOf(subString);
+                System.out.println("String " + minutes);
+                float actualMinutes = ((float)minutes / (float)100) * (float) 60;
+                System.out.println("actual minutes " + actualMinutes);
+
+                int actualActualMinutes = Math.round(actualMinutes);
+                System.out.println("actual actual minutes " + actualActualMinutes);
+
+                int hourFromSlider = timeFromSlider.intValue();
+
+//                calendar.set(Calendar.HOUR_OF_DAY, ((int) timeSlider.getValue()));
+                calendar.set(2018, 7, 10, hourFromSlider, actualActualMinutes);
+                String dynamicDateAndTime = calendar.getTime().toString();
+                String dynamicDateAndTimeTidied = dynamicDateAndTime.substring(0, 19);
+
+                time.setText(dynamicDateAndTimeTidied);
+
+
+                sceneView.setSunTime(calendar);
+                System.out.println(timeSlider.getValue());
+                System.out.println(calendar.getTime());
+
+
+              }
+      );
+//
 
 
 //       set light of the scene to the time value the user selected
-      timeSlider.valueChangingProperty().addListener(o -> {
-
-        if (!timeSlider.isValueChanging()) {
-          Double sliderValue = timeSlider.getValue();
-          Integer asSliderInt = sliderValue.intValue();
-          calendar.set(Calendar.HOUR_OF_DAY, asSliderInt);
-
-          sceneView.setSunTime(calendar);
-
-          System.out.println("listening");
-          System.out.println(calendar.getTime());
-        }
-
-      });
-
+//      timeSlider.valueChangingProperty().addListener(o -> {
+//
+//        if (!timeSlider.isValueChanging()) {
+//          Double sliderValue = timeSlider.getValue();
+//          Integer asSliderInt = sliderValue.intValue();
+//          calendar.set(Calendar.HOUR_OF_DAY, asSliderInt);
+//
+//          sceneView.setSunTime(calendar);
+//
+//          System.out.println("listening");
+//          System.out.println(calendar.getTime());
+//        }
+//
+//      });
 
 
       // create a control panel
@@ -148,8 +208,8 @@ public class RealisticEnvironmentEffectSample extends Application {
 
       // create buttons to set each atmosphere effect
       Button noSunButton = new Button("No sun light effect");
-      Button sunOnlyButton = new Button ("Sun light only");
-      Button sunAndShadowsButton = new Button ("Sun light with shadows");
+      Button sunOnlyButton = new Button("Sun light only");
+      Button sunAndShadowsButton = new Button("Sun light with shadows");
       noSunButton.setMaxWidth(Double.MAX_VALUE);
       sunOnlyButton.setMaxWidth(Double.MAX_VALUE);
       sunAndShadowsButton.setMaxWidth(Double.MAX_VALUE);
@@ -168,26 +228,27 @@ public class RealisticEnvironmentEffectSample extends Application {
       StackPane.setMargin(controlsVBox, new Insets(10, 0, 0, 10));
 
 
+      // TODO find viewpoint
 
-      sceneView.setOnMouseClicked(event -> {
-
-        Point2D pointClicked = new Point2D(event.getX(), event.getY());
-
-        ListenableFuture<Point> identifyPoint = sceneView.screenToLocationAsync(pointClicked);
-
-        identifyPoint.addDoneListener(() -> {
-
-          try {
-            System.out.println(identifyPoint.get().toString());
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          } catch (ExecutionException e) {
-            e.printStackTrace();
-          }
-
-        });
-
-      });
+//      sceneView.setOnMouseClicked(event -> {
+//
+//        Point2D pointClicked = new Point2D(event.getX(), event.getY());
+//
+//        ListenableFuture<Point> identifyPoint = sceneView.screenToLocationAsync(pointClicked);
+//
+//        identifyPoint.addDoneListener(() -> {
+//
+//          try {
+//            System.out.println(identifyPoint.get().toString());
+//          } catch (InterruptedException e) {
+//            e.printStackTrace();
+//          } catch (ExecutionException e) {
+//            e.printStackTrace();
+//          }
+//
+//        });
+//
+//      });
 
     } catch (Exception e) {
       // on any error, display the stack trace.
