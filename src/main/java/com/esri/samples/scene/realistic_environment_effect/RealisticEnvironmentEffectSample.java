@@ -69,7 +69,7 @@ public class RealisticEnvironmentEffectSample extends Application {
 
       // create a scene and add a basemap to it
       ArcGISScene scene = new ArcGISScene();
-      scene.setBasemap(Basemap.createImagery());
+      scene.setBasemap(Basemap.createTopographic());
 
       // set the scene to a scene view
       sceneView = new SceneView();
@@ -98,6 +98,8 @@ public class RealisticEnvironmentEffectSample extends Application {
 
       // set a new calendar and add a date and time
       Calendar calendar = new GregorianCalendar(2018, 7, 10, 12, 00, 0);
+      sceneView.setSunTime(calendar);
+
       // get information about calendar
       String dateAndTime = calendar.getTime().toString();
       // tidy string to just return date and time (hours and minutes)
@@ -107,6 +109,7 @@ public class RealisticEnvironmentEffectSample extends Application {
 
       // initiate slider
       timeSlider = new Slider();
+      timeSlider.setPadding(new Insets(10));
       // set maximum of 24 ticks (to  match 24 hr clock)
       timeSlider.setMax(24);
       // show tick marks for time slider
@@ -128,17 +131,28 @@ public class RealisticEnvironmentEffectSample extends Application {
         Double timeFromSlider = timeSlider.getValue();
         // to get minutes from timer value, split double to the two values after decimal place
         String timeAsString = timeFromSlider.toString();
-        String subString = timeAsString.substring(3, 5);
-        int minutes = Integer.valueOf(subString);
-        // convert figures into minutes
-        float actualMinutes = ((float) minutes / (float) 100) * (float) 60;
-        // round into an integer
-        int minuteFromSlider = Math.round(actualMinutes);
+
         // get the hour value from the slider
         int hourFromSlider = timeFromSlider.intValue();
 
-        // set the calendar for given hour and minute from slider value
-        calendar.set(2018, 7, 10, hourFromSlider, minuteFromSlider);
+        if (timeAsString.length() > 4) {
+          String subString = timeAsString.substring(3, 5);
+
+          int minutes = Integer.valueOf(subString);
+          // convert figures into minutes
+          float actualMinutes = ((float) minutes / (float) 100) * (float) 60;
+          // round into an integer
+          int minuteFromSlider = Math.round(actualMinutes);
+
+          // set the calendar for given hour and minute from slider value
+          calendar.set(2018, 7, 10, hourFromSlider, minuteFromSlider);
+
+        } else {
+          calendar.set(2018, 7, 10, hourFromSlider, 00);
+        }
+
+
+
         // update label to reflect current date and time
         String dynamicDateAndTime = calendar.getTime().toString();
         String dynamicDateAndTimeTidied = dynamicDateAndTime.substring(0, 16);
@@ -166,7 +180,7 @@ public class RealisticEnvironmentEffectSample extends Application {
       controlsVBox.setBackground(new Background(new BackgroundFill(Paint.valueOf("rgba(0, 0, 0, 0.3)"),
               CornerRadii.EMPTY, Insets.EMPTY)));
       controlsVBox.setPadding(new Insets(10.0));
-      controlsVBox.setMaxSize(275, 110);
+      controlsVBox.setMaxSize(265, 110);
       controlsVBox.getStyleClass().add("panel-region");
 
       // add buttons to the control panel
