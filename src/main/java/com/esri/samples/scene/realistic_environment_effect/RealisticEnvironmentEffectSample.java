@@ -103,12 +103,14 @@ public class RealisticEnvironmentEffectSample extends Application {
 
       // set atmosphere effect to realistic
       sceneView.setAtmosphereEffect(AtmosphereEffect.REALISTIC);
+
       // set a new calendar and add a date and time
       Calendar calendar = new GregorianCalendar(2018, 7, 10, 12, 00, 0);
-
+      // get information about calendar
       String dateAndTime = calendar.getTime().toString();
-      // tidy string to just return date and time
-      String dateAndTimeTidied = dateAndTime.substring(0, 19);
+      // tidy string to just return date and time (hours and minutes)
+      String dateAndTimeTidied = dateAndTime.substring(0, 16);
+      // set a label to display the tidied date and time
       time = new Label(dateAndTimeTidied);
 
       // initiate slider
@@ -125,88 +127,37 @@ public class RealisticEnvironmentEffectSample extends Application {
       timeSlider.setShowTickLabels(true);
 
       // set the slider to display tick labels as time strings
-      timeSlider.setLabelFormatter(new StringConverter<Double>() {
-
-        @Override
-        public String toString(Double object) {
-
-          if (object == 4) return "4am";
-          if (object == 8) return "8am";
-          if (object == 12) return "Midday";
-          if (object == 16) return "4pm";
-          if (object == 20) return "8pm";
-
-          return "Midnight";
-        }
-
-        @Override
-        public Double fromString(String string) {
-          return null;
-        }
-      });
-
+      setSliderLabels();
 
       // when the slider changes, update the hour of the day based on the value of the slider
       timeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
 
-                Double timeFromSlider = timeSlider.getValue();
-                String timeAsString = timeFromSlider.toString();
-                String subString = timeAsString.substring(3, 5);
-                System.out.println("Sub string" + subString);
-                int minutes = Integer.valueOf(subString);
-                System.out.println("String " + minutes);
-                float actualMinutes = ((float)minutes / (float)100) * (float) 60;
-                System.out.println("actual minutes " + actualMinutes);
+        // get value from the slider
+        Double timeFromSlider = timeSlider.getValue();
+        // to get minutes from timer value, split double to the two values after decimal place
+        String timeAsString = timeFromSlider.toString();
+        String subString = timeAsString.substring(3, 5);
+        int minutes = Integer.valueOf(subString);
+        // convert figures into minutes
+        float actualMinutes = ((float) minutes / (float) 100) * (float) 60;
+        // round into an integer
+        int minuteFromSlider = Math.round(actualMinutes);
+        // get the hour value from the slider
+        int hourFromSlider = timeFromSlider.intValue();
 
-                int actualActualMinutes = Math.round(actualMinutes);
-                System.out.println("actual actual minutes " + actualActualMinutes);
+        // set the calendar for given hour and minute from slider value
+        calendar.set(2018, 7, 10, hourFromSlider, minuteFromSlider);
+        // update label to reflect current date and time
+        String dynamicDateAndTime = calendar.getTime().toString();
+        String dynamicDateAndTimeTidied = dynamicDateAndTime.substring(0, 16);
+        time.setText(dynamicDateAndTimeTidied);
 
-                int hourFromSlider = timeFromSlider.intValue();
-
-//                calendar.set(Calendar.HOUR_OF_DAY, ((int) timeSlider.getValue()));
-                calendar.set(2018, 7, 10, hourFromSlider, actualActualMinutes);
-                String dynamicDateAndTime = calendar.getTime().toString();
-                String dynamicDateAndTimeTidied = dynamicDateAndTime.substring(0, 19);
-
-                time.setText(dynamicDateAndTimeTidied);
-
-
-                sceneView.setSunTime(calendar);
-                System.out.println(timeSlider.getValue());
-                System.out.println(calendar.getTime());
-
-
-              }
+        // set the sun time to calendar
+        sceneView.setSunTime(calendar);
+        }
       );
-//
 
-
-//       set light of the scene to the time value the user selected
-//      timeSlider.valueChangingProperty().addListener(o -> {
-//
-//        if (!timeSlider.isValueChanging()) {
-//          Double sliderValue = timeSlider.getValue();
-//          Integer asSliderInt = sliderValue.intValue();
-//          calendar.set(Calendar.HOUR_OF_DAY, asSliderInt);
-//
-//          sceneView.setSunTime(calendar);
-//
-//          System.out.println("listening");
-//          System.out.println(calendar.getTime());
-//        }
-//
-//      });
-
-
-      // create a control panel
-      VBox controlsVBox = new VBox(6);
-      controlsVBox.setBackground(new Background(new BackgroundFill(Paint.valueOf("rgba(0, 0, 0, 0.3)"),
-              CornerRadii.EMPTY, Insets.EMPTY)));
-      controlsVBox.setPadding(new Insets(10.0));
-      controlsVBox.setMaxSize(260, 110);
-      controlsVBox.getStyleClass().add("panel-region");
-
-      // create buttons to set each atmosphere effect
+      // create buttons to set each lighting effect
       Button noSunButton = new Button("No sun light effect");
       Button sunOnlyButton = new Button("Sun light only");
       Button sunAndShadowsButton = new Button("Sun light with shadows");
@@ -218,6 +169,13 @@ public class RealisticEnvironmentEffectSample extends Application {
       sunOnlyButton.setOnAction(event -> sceneView.setSunLighting(LightingMode.LIGHT));
       sunAndShadowsButton.setOnAction(event -> sceneView.setSunLighting(LightingMode.LIGHT_AND_SHADOWS));
 
+      // create a control panel
+      VBox controlsVBox = new VBox(6);
+      controlsVBox.setBackground(new Background(new BackgroundFill(Paint.valueOf("rgba(0, 0, 0, 0.3)"),
+              CornerRadii.EMPTY, Insets.EMPTY)));
+      controlsVBox.setPadding(new Insets(10.0));
+      controlsVBox.setMaxSize(275, 110);
+      controlsVBox.getStyleClass().add("panel-region");
 
       // add buttons to the control panel
       controlsVBox.getChildren().addAll(time, noSunButton, sunOnlyButton, sunAndShadowsButton, timeSlider);
@@ -255,6 +213,33 @@ public class RealisticEnvironmentEffectSample extends Application {
       e.printStackTrace();
     }
   }
+  
+
+  /**
+   * Set labels to display on the slider.
+   */
+  private void setSliderLabels() {
+
+    timeSlider.setLabelFormatter(new StringConverter<Double>() {
+
+      @Override
+      public String toString(Double object) {
+
+        if (object == 4) return "4am";
+        if (object == 8) return "8am";
+        if (object == 12) return "Midday";
+        if (object == 16) return "4pm";
+        if (object == 20) return "8pm";
+
+        return "Midnight";
+      }
+
+      @Override
+      public Double fromString(String string) {
+        return null;
+      }
+    });
+  }
 
   /**
    * Stops and releases all resources used in application.
@@ -276,6 +261,4 @@ public class RealisticEnvironmentEffectSample extends Application {
 
     Application.launch(args);
   }
-
-
 }
