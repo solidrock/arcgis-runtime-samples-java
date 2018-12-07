@@ -16,16 +16,10 @@
 
 package com.esri.samples.scene.realistic_environment_effect;
 
-import com.esri.arcgisruntime.concurrent.ListenableFuture;
-import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
 import com.esri.arcgisruntime.mapping.view.LightingMode;
-import com.sun.xml.internal.bind.v2.TODO;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -37,7 +31,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Paint;
-import javafx.stage.Stage;
+import javafx.stage.Stage;import javafx.util.StringConverter;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import com.esri.arcgisruntime.mapping.ArcGISScene;
 import com.esri.arcgisruntime.mapping.ArcGISTiledElevationSource;
@@ -46,12 +42,7 @@ import com.esri.arcgisruntime.mapping.Surface;
 import com.esri.arcgisruntime.mapping.view.AtmosphereEffect;
 import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.mapping.view.Camera;
-import javafx.util.StringConverter;
 
-import java.text.DecimalFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.concurrent.ExecutionException;
 
 public class RealisticEnvironmentEffectSample extends Application {
 
