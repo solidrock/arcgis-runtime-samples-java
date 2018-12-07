@@ -185,35 +185,12 @@ public class RealisticEnvironmentEffectSample extends Application {
       StackPane.setAlignment(controlsVBox, Pos.TOP_RIGHT);
       StackPane.setMargin(controlsVBox, new Insets(10, 0, 0, 10));
 
-
-      // TODO find viewpoint
-
-//      sceneView.setOnMouseClicked(event -> {
-//
-//        Point2D pointClicked = new Point2D(event.getX(), event.getY());
-//
-//        ListenableFuture<Point> identifyPoint = sceneView.screenToLocationAsync(pointClicked);
-//
-//        identifyPoint.addDoneListener(() -> {
-//
-//          try {
-//            System.out.println(identifyPoint.get().toString());
-//          } catch (InterruptedException e) {
-//            e.printStackTrace();
-//          } catch (ExecutionException e) {
-//            e.printStackTrace();
-//          }
-//
-//        });
-//
-//      });
-
     } catch (Exception e) {
       // on any error, display the stack trace.
       e.printStackTrace();
     }
   }
-  
+
 
   /**
    * Set labels to display on the slider.
