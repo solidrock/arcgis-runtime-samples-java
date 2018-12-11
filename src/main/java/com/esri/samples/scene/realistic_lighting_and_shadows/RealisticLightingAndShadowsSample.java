@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.esri.samples.scene.realistic_environment_effect;
+package com.esri.samples.scene.realistic_lighting_and_shadows;
 
 import com.esri.arcgisruntime.layers.ArcGISSceneLayer;
 import com.esri.arcgisruntime.mapping.view.LightingMode;
@@ -45,7 +45,7 @@ import com.esri.arcgisruntime.mapping.view.SceneView;
 import com.esri.arcgisruntime.mapping.view.Camera;
 
 
-public class RealisticEnvironmentEffectSample extends Application {
+public class RealisticLightingAndShadowsSample extends Application {
 
   private SceneView sceneView;
   private Label time;
