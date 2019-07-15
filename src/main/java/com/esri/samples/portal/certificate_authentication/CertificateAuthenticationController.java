@@ -53,10 +53,10 @@ public class CertificateAuthenticationController {
   public void initialize() {
     try {
 
-    // create a map view and add an imagery basemap
-    mapView = new MapView();
-    ArcGISMap map = new ArcGISMap(Basemap.createImageryWithLabels());
-    mapView.setMap(map);
+      // create a map view and add an imagery basemap
+      mapView = new MapView();
+      ArcGISMap map = new ArcGISMap(Basemap.createImageryWithLabels());
+      mapView.setMap(map);
 
       // create a file chooser for opening certificate files
       fileChooser = new FileChooser();
@@ -116,7 +116,7 @@ public class CertificateAuthenticationController {
         });
       });
     } else if (portalUrlTextField.getText().equals("")) {
-      new Alert(Alert.AlertType.ERROR, "No Portal url provided.").show();
+      new Alert(Alert.AlertType.ERROR, "No Portal URL provided.").show();
     } else if (certificatePathTextField.getText().equals("")){
       new Alert(Alert.AlertType.ERROR, "No certificate provided.").show();
     }

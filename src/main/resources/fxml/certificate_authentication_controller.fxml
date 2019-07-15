@@ -31,11 +31,11 @@
     <VBox spacing="10" StackPane.alignment="TOP_LEFT" maxWidth="200" minWidth="200" maxHeight="50">
         <padding><Insets left="20" top="20"/></padding>
         <VBox>
-            <Label text="Certificate Path" style="-fx-font-weight: bold"/>
-            <TextField fx:id="certificatePathTextField" promptText="Certificate Path" onMouseClicked="#getCertificatePath"/>
-
             <Label text="Secure Portal URL" style="-fx-font-weight: bold"/>
             <TextField fx:id="portalUrlTextField" promptText="Portal URL"/>
+
+            <Label text="Certificate Path" style="-fx-font-weight: bold"/>
+            <TextField fx:id="certificatePathTextField" promptText="Certificate Path" onMouseClicked="#getCertificatePath"/>
 
             <Label fx:id="loggedInUserNameLabel" style="-fx-font-weight: bold"/>
         </VBox>

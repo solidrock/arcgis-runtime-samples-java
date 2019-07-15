@@ -12,27 +12,25 @@ PKI (Public Key Infrastructure) is a certificate authentication method to secure
 
 > **NOTE**: You must provide your own ArcGIS Portal with PKI authentication configured.
 
-Provide a URL to a PKI-enabled server, then use the certificate selection UI to select an appropriate certificate for that server.
+Provide a URL to a PKI-enabled server and a path to a PKI certificate for that server. When prompted, provide the password for the certificate, and select 'Authenticate' to connect to the portal and load the contents.
 
 ## How it works
 
-1. Create the X.509 certificate store, referring to the user's certificates.
-2. Open the certificate store in read-only mode.
-3. Find all certificates that are currently valid.
-4. Display a content dialog, allowing the user to select a certificate.
-5. Create the ArcGIS Runtime credential with the chosen certificate.
-6. [Workaround] Use `Windows.Web.Http.HttpClient` to force certificate selection to work.
-7. Create the Portal, explicitly passing in the credential that was created.
+1. Use a path to a 'pfx' or 'p12' certificate and its password to create a `CertificateCredential`
+2. Create a custom `AuthenticationChallengeHandler` that handles challenges of `AuthenticationChallenge.Type.CERTIFICATE_CHALLENGE`, and responds with the created certificate credential.
+3. Set up the `AuthenticationManager` to use the created authentication challenge handler.
+4. Create a `Portal` from a URL to a resource secured by PKI authentication, and the authentication manager will resolve the authentication challenges.
 
 ## Relevant API
 
+* AuthenticationChallengeHandler
+* AuthenticationManager
 * CertificateCredential
+* Portal
 
 ## Additional information
 
 ArcGIS Enterprise requires special configuration to enable support for PKI. PKI authentication can be set up to work with accounts managed by [Windows Active Directory](https://enterprise.arcgis.com/en/portal/latest/administer/windows/using-windows-active-directory-and-pki-to-secure-access-to-your-portal.htm) or [LDAP](https://enterprise.arcgis.com/en/portal/latest/administer/windows/use-ldap-and-pki-to-secure-access-to-your-portal.htm).
-
-> ⚠ **NOTE**: UWP apps must declare the following capabilities in their manifest: Private Networks (Client & Server), Shared User Certificates.
 
 ## Tags
 
