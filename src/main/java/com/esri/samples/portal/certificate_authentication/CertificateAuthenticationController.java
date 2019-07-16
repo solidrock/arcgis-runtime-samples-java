@@ -110,8 +110,8 @@ public class CertificateAuthenticationController {
             // load an item?
 
           } else {
-            new Alert(Alert.AlertType.ERROR, "Failed to load Portal: " + portal.getLoadError().getMessage()).show();
-            System.out.println(portal.getLoadError().getCause().getMessage());
+            new Alert(Alert.AlertType.ERROR, "Failed to load Portal: " + portal.getLoadError().getCause().getMessage()).show();
+            System.out.println("load error: " + portal.getLoadError().getCause().getMessage());
           }
         });
       });
