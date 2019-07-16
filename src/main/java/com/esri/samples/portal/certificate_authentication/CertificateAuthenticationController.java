@@ -39,7 +39,7 @@ public class CertificateAuthenticationController {
   @FXML
   private TextField portalUrlTextField;
   @FXML
-  private Label loggedInUserNameLabel;
+  private Label portalStatusLabel;
   @FXML
   private TextField certificatePathTextField;
   @FXML
@@ -70,18 +70,18 @@ public class CertificateAuthenticationController {
   }
 
   /**
-   *
+   * Uses the provided Certificate path and password to create a Credential and connect to the requested Portal.
    */
   @FXML
-  private void handleButtonClick() {
+  private void handleAuthenticateClick() {
     // store the server url for later reference.
     String portalUrl;
 
     if (!portalUrlTextField.getText().equals("") && !certificatePathTextField.getText().equals("")) {
       portalUrl = portalUrlTextField.getText();
       certificatePath = certificatePathTextField.getText();
-      System.out.println("portalUrl:" + portalUrl);
-      System.out.println("certificatePath:" + certificatePath);
+      System.out.println("portalUrl: " + portalUrl);
+      System.out.println("certificatePath: " + certificatePath);
 
       // prompt for certificate password
       PasswordDialog passwordDialog = new PasswordDialog();
@@ -106,7 +106,7 @@ public class CertificateAuthenticationController {
             System.out.println(portal.getCredential());
 
             // update the UI with the logged in user
-            loggedInUserNameLabel.setText("Logged in to portal as user: " + portal.getUser().getFullName());
+            portalStatusLabel.setText("Logged in to portal as user: " + portal.getUser().getFullName());
             // load an item?
 
           } else {
@@ -129,18 +129,16 @@ public class CertificateAuthenticationController {
   }
 
   /**
-   * If the certificate path text field is empty, opens a file chooser and sets the certificate path.
+   * Opens a file chooser and sets the certificate path.
    */
   @FXML
   private void getCertificatePath(){
-    if (certificatePathTextField.getText().equals("")){
       certificatePath = fileChooser.showOpenDialog(Stage.getWindows().get(0)).getAbsolutePath();
       certificatePathTextField.setText(certificatePath);
-    }
   }
 
   /**
-   *
+   * Handler to be used when accessing a secured resource.
    */
   class CustomChallengeHandler implements AuthenticationChallengeHandler {
 

@@ -28,17 +28,18 @@
     <!-- SDK MapView -->
     <MapView fx:id="mapView"/>
     <!-- Control Panel -->
-    <VBox spacing="10" StackPane.alignment="TOP_LEFT" maxWidth="200" minWidth="200" maxHeight="50">
+    <VBox spacing="10" StackPane.alignment="TOP_LEFT" maxWidth="250" minWidth="250" maxHeight="70">
         <padding><Insets left="20" top="20"/></padding>
-        <VBox>
-            <Label text="Secure Portal URL" style="-fx-font-weight: bold"/>
-            <TextField fx:id="portalUrlTextField" promptText="Portal URL"/>
 
-            <Label text="Certificate Path" style="-fx-font-weight: bold"/>
-            <TextField fx:id="certificatePathTextField" promptText="Certificate Path" onMouseClicked="#getCertificatePath"/>
+        <Label text="Secure Portal URL" style="-fx-font-weight: bold"/>
+        <TextField fx:id="portalUrlTextField" promptText="Portal URL"/>
 
-            <Label fx:id="loggedInUserNameLabel" style="-fx-font-weight: bold"/>
-        </VBox>
-        <Button onAction="#handleButtonClick" text="Authenticate"/>
+        <Label text="Certificate Path" style="-fx-font-weight: bold"/>
+        <TextField fx:id="certificatePathTextField" promptText="Certificate Path"/>
+        <Button fx:id="selectCertificateButton" text="Select Certificate" onAction="#getCertificatePath"/>
+
+        <Label fx:id="portalStatusLabel" style="-fx-font-weight: bold" text="Status: not connected to a portal."/>
+
+        <Button onAction="#handleAuthenticateClick" text="Authenticate"/>
     </VBox>
 </StackPane>
