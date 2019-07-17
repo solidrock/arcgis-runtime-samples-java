@@ -78,8 +78,11 @@ public class CertificateAuthenticationController {
     String portalUrl;
 
     if (!portalUrlTextField.getText().equals("") && !certificatePathTextField.getText().equals("")) {
+      // show portal url in UI
       portalUrl = portalUrlTextField.getText();
-      certificatePath = certificatePathTextField.getText();
+      // prompt for certificate path
+      certificatePath = fileChooser.showOpenDialog(Stage.getWindows().get(0)).getAbsolutePath();
+      certificatePathTextField.setText(certificatePath);
 
       // prompt for certificate password
       PasswordDialog passwordDialog = new PasswordDialog();
@@ -114,16 +117,7 @@ public class CertificateAuthenticationController {
       new Alert(Alert.AlertType.ERROR, "No certificate provided.").show();
     }
   }
-
-  /**
-   * Opens a file chooser and sets the certificate path.
-   */
-  @FXML
-  private void getCertificatePath() {
-    certificatePath = fileChooser.showOpenDialog(Stage.getWindows().get(0)).getAbsolutePath();
-    certificatePathTextField.setText(certificatePath);
-  }
-
+  
   /**
    * Handler to be used when accessing a secured resource.
    */
