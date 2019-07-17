@@ -45,7 +45,6 @@ public class CertificateAuthenticationController {
   @FXML
   private MapView mapView;
 
-  private String certificatePath;
   private FileChooser fileChooser;
   private CertificateCredential certificateCredential;
 
@@ -74,14 +73,14 @@ public class CertificateAuthenticationController {
    */
   @FXML
   private void handleAuthenticateClick() {
-    // store the server url for later reference.
+    // store the portal url for later reference.
     String portalUrl;
 
     if (!portalUrlTextField.getText().equals("") && !certificatePathTextField.getText().equals("")) {
       // show portal url in UI
       portalUrl = portalUrlTextField.getText();
       // prompt for certificate path
-      certificatePath = fileChooser.showOpenDialog(Stage.getWindows().get(0)).getAbsolutePath();
+      String certificatePath = fileChooser.showOpenDialog(Stage.getWindows().get(0)).getAbsolutePath();
       certificatePathTextField.setText(certificatePath);
 
       // prompt for certificate password
@@ -117,7 +116,7 @@ public class CertificateAuthenticationController {
       new Alert(Alert.AlertType.ERROR, "No certificate provided.").show();
     }
   }
-  
+
   /**
    * Handler to be used when accessing a secured resource.
    */
