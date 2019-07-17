@@ -28,7 +28,7 @@
     <!-- SDK MapView -->
     <MapView fx:id="mapView"/>
     <!-- Control Panel -->
-    <VBox spacing="10" StackPane.alignment="TOP_LEFT" maxWidth="250" minWidth="250" maxHeight="70">
+    <VBox spacing="10" StackPane.alignment="CENTER" maxWidth="250" minWidth="250" maxHeight="70" alignment="CENTER">
         <padding><Insets left="20" top="20"/></padding>
         <Label text="Secure Portal URL" style="-fx-font-weight: bold"/>
         <TextField fx:id="portalUrlTextField" promptText="Portal URL"/>
