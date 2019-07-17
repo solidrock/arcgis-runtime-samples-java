@@ -36,14 +36,10 @@ import com.esri.arcgisruntime.security.CertificateCredential;
 
 public class CertificateAuthenticationController {
 
-  @FXML
-  private TextField portalUrlTextField;
-  @FXML
-  private Label portalStatusLabel;
-  @FXML
-  private TextField certificatePathTextField;
-  @FXML
-  private MapView mapView;
+  @FXML private TextField portalUrlTextField;
+  @FXML private Label portalStatusLabel;
+  @FXML private TextField certificatePathTextField;
+  @FXML private MapView mapView;
 
   private FileChooser fileChooser;
   private CertificateCredential certificateCredential;
