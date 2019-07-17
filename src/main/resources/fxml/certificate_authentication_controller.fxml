@@ -30,16 +30,12 @@
     <!-- Control Panel -->
     <VBox spacing="10" StackPane.alignment="TOP_LEFT" maxWidth="250" minWidth="250" maxHeight="70">
         <padding><Insets left="20" top="20"/></padding>
-
         <Label text="Secure Portal URL" style="-fx-font-weight: bold"/>
         <TextField fx:id="portalUrlTextField" promptText="Portal URL"/>
-
         <Label text="Certificate Path" style="-fx-font-weight: bold"/>
         <TextField fx:id="certificatePathTextField" promptText="Certificate Path"/>
         <Button text="Select Certificate" onAction="#getCertificatePath"/>
-
         <Label fx:id="portalStatusLabel" style="-fx-font-weight: bold" text="Status: not connected to a portal."/>
-
         <Button onAction="#handleAuthenticateClick" text="Authenticate"/>
     </VBox>
 </StackPane>
