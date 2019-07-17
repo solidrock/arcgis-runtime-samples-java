@@ -80,8 +80,6 @@ public class CertificateAuthenticationController {
     if (!portalUrlTextField.getText().equals("") && !certificatePathTextField.getText().equals("")) {
       portalUrl = portalUrlTextField.getText();
       certificatePath = certificatePathTextField.getText();
-      System.out.println("portalUrl: " + portalUrl);
-      System.out.println("certificatePath: " + certificatePath);
 
       // prompt for certificate password
       PasswordDialog passwordDialog = new PasswordDialog();
@@ -100,42 +98,30 @@ public class CertificateAuthenticationController {
         Portal portal = new Portal(portalUrl, true);
         portal.loadAsync();
         portal.addDoneLoadingListener(() -> {
-          if (portal.getLoadStatus() == LoadStatus.LOADED){
-            System.out.println(portal.getUser());
-            System.out.println(portal.getLoadStatus());
-            System.out.println(portal.getPortalInfo());
-            System.out.println(portal.getCredential());
+          if (portal.getLoadStatus() == LoadStatus.LOADED) {
 
             // update the UI with the logged in user
             portalStatusLabel.setText("Logged in to portal as user: " + portal.getUser().getFullName());
-            // load an item?
 
           } else {
             new Alert(Alert.AlertType.ERROR, "Failed to load Portal: " + portal.getLoadError().getCause().getMessage()).show();
-            System.out.println("load error: " + portal.getLoadError().getCause().getMessage());
           }
         });
       });
     } else if (portalUrlTextField.getText().equals("")) {
       new Alert(Alert.AlertType.ERROR, "No Portal URL provided.").show();
-    } else if (certificatePathTextField.getText().equals("")){
+    } else if (certificatePathTextField.getText().equals("")) {
       new Alert(Alert.AlertType.ERROR, "No certificate provided.").show();
     }
-
-    // deal with:
-    // HttpRequestException: 404, 403, couldn't authenticate,
-    // UriFormatException: "Couldn't authenticate. Enter a valid URL first."
-    // Exception e: "Couldn't authenticate. See debug output for details."
-
   }
 
   /**
    * Opens a file chooser and sets the certificate path.
    */
   @FXML
-  private void getCertificatePath(){
-      certificatePath = fileChooser.showOpenDialog(Stage.getWindows().get(0)).getAbsolutePath();
-      certificatePathTextField.setText(certificatePath);
+  private void getCertificatePath() {
+    certificatePath = fileChooser.showOpenDialog(Stage.getWindows().get(0)).getAbsolutePath();
+    certificatePathTextField.setText(certificatePath);
   }
 
   /**
