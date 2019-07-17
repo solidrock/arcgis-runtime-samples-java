@@ -94,6 +94,7 @@ public class CertificateAuthenticationController {
 
         // configure the authentication challenge handler
         AuthenticationManager.setAuthenticationChallengeHandler(new CustomChallengeHandler());
+        AuthenticationManager.setTrustAllSigners(true);
 
         // create and load the portal
         Portal portal = new Portal(portalUrl, true);
