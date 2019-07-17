@@ -22,20 +22,26 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import com.esri.arcgisruntime.mapping.view.MapView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Separator?>
 <StackPane xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.esri.samples.portal.certificate_authentication.CertificateAuthenticationController"
            stylesheets="/css/style.css">
     <!-- SDK MapView -->
     <MapView fx:id="mapView"/>
     <!-- Control Panel -->
-    <VBox spacing="10" StackPane.alignment="CENTER" maxWidth="250" minWidth="250" maxHeight="70" alignment="CENTER">
+    <VBox spacing="10" StackPane.alignment="CENTER" maxWidth="400" minWidth="250" maxHeight="70" alignment="CENTER">
         <padding><Insets left="20" top="20"/></padding>
         <Label text="Secure Portal URL" style="-fx-font-weight: bold"/>
         <TextField fx:id="portalUrlTextField" promptText="Portal URL"/>
+        <Separator/>
         <Label text="Certificate Path" style="-fx-font-weight: bold"/>
-        <TextField fx:id="certificatePathTextField" promptText="Certificate Path"/>
-        <Button text="Select Certificate" onAction="#getCertificatePath"/>
-        <Label fx:id="portalStatusLabel" style="-fx-font-weight: bold" text="Status: not connected to a portal."/>
+        <HBox>
+            <Button onAction="#getCertificatePath" text="Select Certificate" minWidth="120" maxWidth="120"/>
+            <TextField fx:id="certificatePathTextField" promptText="Certificate Path" minWidth="260" maxWidth="260"/>
+        </HBox>
+        <Separator/>
         <Button onAction="#handleAuthenticateClick" text="Authenticate"/>
+        <Label fx:id="portalStatusLabel" style="-fx-font-weight: bold" text="Status: not connected to a portal."/>
     </VBox>
 </StackPane>
