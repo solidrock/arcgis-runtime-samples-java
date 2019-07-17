@@ -36,9 +36,9 @@
         <TextField fx:id="portalUrlTextField" promptText="Portal URL"/>
         <Separator/>
         <Label text="Certificate Path" style="-fx-font-weight: bold"/>
-        <HBox>
-            <Button onAction="#getCertificatePath" text="Select Certificate" minWidth="120" maxWidth="120"/>
-            <TextField fx:id="certificatePathTextField" promptText="Certificate Path" minWidth="260" maxWidth="260"/>
+        <HBox spacing="10">
+            <Button onAction="#getCertificatePath" text="Select Certificate" minWidth="115" maxWidth="115"/>
+            <TextField fx:id="certificatePathTextField" promptText="Certificate Path" minWidth="255" maxWidth="255"/>
         </HBox>
         <Separator/>
         <Button onAction="#handleAuthenticateClick" text="Authenticate"/>
