@@ -10,7 +10,7 @@ PKI (Public Key Infrastructure) is a certificate authentication method to secure
 
 ## How to use the sample
 
-> **NOTE**: You must provide your own ArcGIS Portal with PKI authentication configured.
+**NOTE**: You must provide your own ArcGIS Portal with PKI authentication configured.
 
 Provide a URL to a PKI-enabled server and a path to a PKI certificate for that server. When prompted, provide the password for the certificate, and select 'Authenticate' to connect to the portal and load the contents.
 
