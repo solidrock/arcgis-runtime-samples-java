@@ -1,0 +1,33 @@
+{
+    "category": "Portal",
+    "description": "Access secured portals using a certificate.",
+    "ignore": false,
+    "images": [
+        "CertificateAuthenticationWithPKI.png"
+    ],
+    "keywords": [
+        "authentication",
+        "certificate",
+        "login",
+        "passwordless",
+        "PKI",
+        "smartcard",
+        "store",
+        "X509"
+    ],
+    "redirect_from": "/java/latest/sample-code/certificate-authentication.htm",
+    "relevant_apis": [
+        "AuthenticationChallengeHandler",
+        "AuthenticationManager",
+        "CertificateCredential",
+        "Portal"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/samples/certificate_authentication/CertificateAuthenticationController.java",
+        "src/main/java/com/esri/samples/certificate_authentication/CertificateAuthenticationSample.java",
+        "src/main/java/com/esri/samples/certificate_authentication/PasswordDialog.java",
+        "src/main/resources/certificate_authentication_controller.fxml",
+        "src/main/resources/certificate_authentication_password_dialog.fxml"
+    ],
+    "title": "OAuth"
+}
