@@ -1,10 +1,17 @@
 package com.esri.samples.custom_dictionary_style;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.fxml.FXML;
 
+import com.esri.arcgisruntime.data.FeatureTable;
+import com.esri.arcgisruntime.data.Field;
+import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.portal.Portal;
 import com.esri.arcgisruntime.portal.PortalItem;
@@ -12,29 +19,45 @@ import com.esri.arcgisruntime.symbology.DictionarySymbolStyle;
 
 public class CustomDictionaryStyleController {
 
-  @FXML private MapView mapView;
+  @FXML
+  private MapView mapView;
 
   private DictionarySymbolStyle restaurantStyle;
 
   @FXML
   public void initialize() {
-    try{
+    try {
 
       // create a new map with a streets basemap and display it
       ArcGISMap map = new ArcGISMap(Basemap.createStreetsVector());
       mapView.setMap(map);
 
-      // open the custome style file
+      // open the custom style file
       restaurantStyle = DictionarySymbolStyle.createFromFile("./samples-data/stylx/Restaurant.stylx");
 
-
-      Portal portal = new Portal("https://www.arcgis.com/");
-      PortalItem portalItem = new PortalItem(portal, "3daf83e1ec0941428526a07f2d2ae414");
-
-      // create the restaurants layer and add it to the map
-      FeatureLayer featureLayer = new FeatureLayer(portalItem, 0);
-
+      // create a service feature table, and use it to create a feature layer
+      ServiceFeatureTable serviceFeatureTable = new ServiceFeatureTable("https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/Redlands_Restaurants/FeatureServer/0");
+      FeatureLayer featureLayer = new FeatureLayer(serviceFeatureTable);
+      featureLayer.addDoneLoadingListener(()->{
+        mapView.setViewpointAsync(new Viewpoint(featureLayer.getFullExtent()));
+      });
+      // add the layer to the ArcGISMap
       map.getOperationalLayers().add(featureLayer);
+
+      serviceFeatureTable.addDoneLoadingListener(() -> {
+        List<Field> datasetFields = serviceFeatureTable.getFields();
+
+        // build a list of numeric and text field names
+        ArrayList<String> symbolFields = new ArrayList<>();
+        datasetFields.forEach(field -> {
+          if (field.getFieldType() == Field.Type.TEXT ||
+                  field.getFieldType() == Field.Type.INTEGER ||
+                  field.getFieldType() == Field.Type.DOUBLE) {
+            symbolFields.add(field.getName());
+          }
+        });
+      });
+
 
     } catch (Exception e) {
       e.printStackTrace();
