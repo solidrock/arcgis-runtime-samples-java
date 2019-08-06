@@ -57,7 +57,7 @@ task copyNatives(type: Copy) {
 
 run {
     dependsOn copyNatives, downloadData
-    mainClassName = 'com.esri.samples.custom-dictionary-style.CustomDictionaryStyleLauncher'
+    mainClassName = 'com.esri.samples.custom_dictionary_style.CustomDictionaryStyleLauncher'
 }
 
 jar {

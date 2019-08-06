@@ -16,8 +16,59 @@
   -->
 <?import javafx.scene.layout.StackPane?>
 <?import com.esri.arcgisruntime.mapping.view.MapView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.Background?>
+<?import javafx.scene.layout.BackgroundFill?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Separator?>
 <StackPane fx:controller="com.esri.samples.custom_dictionary_style.CustomDictionaryStyleController"
            xmlns:fx="http://javafx.com/fxml" stylesheets="/style.css">
     <MapView fx:id="mapView"/>
+    <ProgressIndicator fx:id="progressIndicator" StackPane.alignment="CENTER"/>
+
+        <GridPane alignment="center" hgap="10" vgap="10" StackPane.alignment="TOP_LEFT" maxHeight="300" maxWidth="275" styleClass="panel-region">
+            <!--Control Panel Styling-->
+            <padding><Insets topRightBottomLeft="10"/></padding>
+            <background>
+                <Background>
+                    <fills>
+                        <BackgroundFill>
+                            <fill>
+                                <Color opacity="0.5"/>
+                            </fill>
+                        </BackgroundFill>
+                    </fills>
+                </Background>
+            </background>
+            <Label text="Field:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Label text="Override:" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label text="Food Style" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <ComboBox fx:id="foodStyleComboBox" onAction="#applyDictionaryRenderer" GridPane.columnIndex="1"
+                      GridPane.rowIndex="1"/>
+            <Label text="Rating" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <ComboBox fx:id="ratingComboBox" onAction="#applyDictionaryRenderer" GridPane.columnIndex="1"
+                      GridPane.rowIndex="2"/>
+            <Label text="Price" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <ComboBox fx:id="priceComboBox" onAction="#applyDictionaryRenderer" GridPane.columnIndex="1"
+                      GridPane.rowIndex="3"/>
+            <Label text="Health Grade" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <ComboBox fx:id="healthGradeComboBox" onAction="#applyDictionaryRenderer" GridPane.columnIndex="1"
+                      GridPane.rowIndex="4"/>
+            <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <ComboBox fx:id="nameComboBox" onAction="#applyDictionaryRenderer" GridPane.columnIndex="1"
+                      GridPane.rowIndex="5"/>
+            <Separator GridPane.columnIndex="0"
+                       GridPane.rowIndex="6" GridPane.columnSpan="2"/>
+            <CheckBox fx:id="showTextCheckbox" text="Show Text" selected="true" onAction="#handleShowTextTick" GridPane.columnIndex="0"
+                      GridPane.rowIndex="7" GridPane.columnSpan="2"/>
+        </GridPane>
+
 
 </StackPane>
