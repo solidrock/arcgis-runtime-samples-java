@@ -30,7 +30,7 @@
            xmlns:fx="http://javafx.com/fxml" stylesheets="/style.css">
     <MapView fx:id="mapView"/>
     <ProgressIndicator fx:id="progressIndicator" StackPane.alignment="CENTER"/>
-    <GridPane alignment="center" hgap="10" vgap="10" StackPane.alignment="TOP_LEFT" maxHeight="300" maxWidth="275"
+    <GridPane alignment="center" hgap="35" vgap="10" StackPane.alignment="TOP_LEFT" maxHeight="300" maxWidth="320"
               styleClass="panel-region">
         <!--Control Panel Styling-->
         <padding>
@@ -47,7 +47,7 @@
                 </fills>
             </Background>
         </background>
-        <Label text="Attribute:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <Label text="Symbol Attribute:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
         <Label text="Override (Feature Table Field):" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
         <Label text="Food Style" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
         <ComboBox fx:id="foodStyleComboBox" GridPane.columnIndex="1"
