@@ -23,22 +23,14 @@ import com.esri.arcgisruntime.symbology.DictionarySymbolStyle;
 
 public class CustomDictionaryStyleController {
 
-  @FXML
-  private MapView mapView;
-  @FXML
-  private ComboBox<String> foodStyleComboBox;
-  @FXML
-  private ComboBox<String> ratingComboBox;
-  @FXML
-  private ComboBox<String> priceComboBox;
-  @FXML
-  private ComboBox<String> healthGradeComboBox;
-  @FXML
-  private ComboBox<String> nameComboBox;
-  @FXML
-  private CheckBox showTextCheckbox;
-  @FXML
-  private ProgressIndicator progressIndicator;
+  @FXML private MapView mapView;
+  @FXML private ComboBox<String> foodStyleComboBox;
+  @FXML private ComboBox<String> ratingComboBox;
+  @FXML private ComboBox<String> priceComboBox;
+  @FXML private ComboBox<String> healthGradeComboBox;
+  @FXML private ComboBox<String> nameComboBox;
+  @FXML private CheckBox showTextCheckbox;
+  @FXML private ProgressIndicator progressIndicator;
 
   private DictionarySymbolStyle restaurantStyle;
   private FeatureLayer restaurantsFeatureLayer;
@@ -143,8 +135,7 @@ public class CustomDictionaryStyleController {
             // find the configurations which apply to 'text' values
             .filter(configuration -> configuration.getName().equals("text"))
             // set their values to correspond to the requested value
-            .forEach(configuration -> configuration.setValue(requestedValue)
-            );
+            .forEach(configuration -> configuration.setValue(requestedValue));
   }
 
   /**
