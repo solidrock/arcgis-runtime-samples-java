@@ -62,9 +62,6 @@
                   GridPane.rowIndex="3"/>
         <Label text="Health Grade" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
         <ComboBox fx:id="healthGradeComboBox" onAction="#applyDictionaryRenderer" GridPane.columnIndex="1"
-                  GridPane.rowIndex="4"/>
-        <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-        <ComboBox fx:id="nameComboBox" onAction="#applyDictionaryRenderer" GridPane.columnIndex="1"
                   GridPane.rowIndex="5"/>
         <Separator GridPane.columnIndex="0"
                    GridPane.rowIndex="6" GridPane.columnSpan="2"/>
