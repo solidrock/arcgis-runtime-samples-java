@@ -12,7 +12,7 @@ In this example, a restaurant layer with attributes for rating, style, health sc
 
 ## How to use the sample
 
-Run the app to see a restaurants layer displayed with a simple marker symbol for all features. Tap "Apply renderer" to apply a dictionary renderer to the layer. The renderer uses symbols from a custom dictionary style to show unique symbols based on several feature attributes. Change the fields used for the renderer by specifying the `inspection` field for the expected `healthgrade` attribute or by choosing to use the alternate `rating` from the field called `MyRating`. You can also turn symbol text on, choose a field to display, and re-apply the renderer. Clear the renderer to return to the symbol marker symbol display.
+Run the app to see a restaurants layer displayed using a dictionary renderer with a custom style file. Use the drop-down menus to select a fields from the feature table to use their data as an override for the available renderer fields and see the result. Use the check-box to show and hide the text within the symbol.
 
 ## How it works
 
@@ -31,6 +31,7 @@ Run the app to see a restaurants layer displayed with a simple marker symbol for
 
 ## About the data
 
+The renderer uses symbols from a custom dictionary style to show unique symbols based on several feature attributes. 
 The custom [restaurant style file](https://arcgisruntime.maps.arcgis.com/home/item.html?id=751138a2e0844e06853522d54103222a) is downloaded automatically from an ArcGIS Online portal item. The symbols it contains were created using ArcGIS Pro. The logic used to apply the symbols comes from an Arcade script embedded in the stylx file (which is a SQLite database), along with a JSON string that defines expected attribute names and configuration properties. For information about creating your own custom dictionary style, see the open source [dictionary-renderer-toolkit](https://esriurl.com/DictionaryToolkit). 
 
 The style is applied to a dataset showing a subset of [restaurants in Redlands, CA](https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/Redlands_Restaurants/FeatureServer).

@@ -47,22 +47,22 @@
                 </fills>
             </Background>
         </background>
-        <Label text="Field:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <Label text="Field Name (Type):" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
         <Label text="Override:" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-        <Label text="Food Style" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <ComboBox fx:id="foodStyleComboBox" onAction="#applyDictionaryRenderer" GridPane.columnIndex="1"
+        <Label text="Food Style (String)" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <ComboBox fx:id="foodStyleComboBox" GridPane.columnIndex="1"
                   GridPane.rowIndex="1"/>
-        <Label text="Rating" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-        <ComboBox fx:id="ratingComboBox" onAction="#applyDictionaryRenderer" GridPane.columnIndex="1"
+        <Label text="Rating (Double)" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <ComboBox fx:id="ratingComboBox" GridPane.columnIndex="1"
                   GridPane.rowIndex="2"/>
-        <Label text="Price" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-        <ComboBox fx:id="priceComboBox" onAction="#applyDictionaryRenderer" GridPane.columnIndex="1"
+        <Label text="Price (Integer)" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <ComboBox fx:id="priceComboBox" GridPane.columnIndex="1"
                   GridPane.rowIndex="3"/>
-        <Label text="Health Grade" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-        <ComboBox fx:id="healthGradeComboBox" onAction="#applyDictionaryRenderer" GridPane.columnIndex="1"
+        <Label text="Health Grade (Integer)" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <ComboBox fx:id="healthGradeComboBox" GridPane.columnIndex="1"
                   GridPane.rowIndex="4"/>
-        <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-        <ComboBox fx:id="nameComboBox" onAction="#applyDictionaryRenderer" GridPane.columnIndex="1"
+        <Label text="Name (String)" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+        <ComboBox fx:id="nameComboBox" GridPane.columnIndex="1"
                   GridPane.rowIndex="5"/>
         <Separator GridPane.columnIndex="0"
                    GridPane.rowIndex="6" GridPane.columnSpan="2"/>

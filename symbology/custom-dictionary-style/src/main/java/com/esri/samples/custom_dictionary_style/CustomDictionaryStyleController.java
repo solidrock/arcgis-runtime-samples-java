@@ -23,14 +23,22 @@ import com.esri.arcgisruntime.symbology.DictionarySymbolStyle;
 
 public class CustomDictionaryStyleController {
 
-  @FXML private MapView mapView;
-  @FXML private ComboBox<String> foodStyleComboBox;
-  @FXML private ComboBox<String> ratingComboBox;
-  @FXML private ComboBox<String> priceComboBox;
-  @FXML private ComboBox<String> healthGradeComboBox;
-  @FXML private ComboBox<String> nameComboBox;
-  @FXML private CheckBox showTextCheckbox;
-  @FXML private ProgressIndicator progressIndicator;
+  @FXML
+  private MapView mapView;
+  @FXML
+  private ComboBox<String> foodStyleComboBox;
+  @FXML
+  private ComboBox<String> ratingComboBox;
+  @FXML
+  private ComboBox<String> priceComboBox;
+  @FXML
+  private ComboBox<String> healthGradeComboBox;
+  @FXML
+  private ComboBox<String> nameComboBox;
+  @FXML
+  private CheckBox showTextCheckbox;
+  @FXML
+  private ProgressIndicator progressIndicator;
 
   private DictionarySymbolStyle restaurantStyle;
   private FeatureLayer restaurantsFeatureLayer;
@@ -78,6 +86,11 @@ public class CustomDictionaryStyleController {
         priceComboBox.getSelectionModel().select("Price");
         healthGradeComboBox.getSelectionModel().select(" ");
         nameComboBox.getSelectionModel().select("Name");
+
+        // add a listener to the combo boxes to apply the dictionary renderer whenever an item is selected
+        comboBoxes.forEach(stringComboBox -> stringComboBox.getSelectionModel().selectedItemProperty().addListener(observable ->
+                applyDictionaryRenderer()
+        ));
 
         // apply the dictionary renderer with the values selected in the comboboxes
         applyDictionaryRenderer();
