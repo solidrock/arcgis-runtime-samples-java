@@ -10,7 +10,7 @@ When symbolizing geoelements in your map, you might need to convey several piece
 
 ## How to use the sample
 
-Run the app to see a restaurants layer displayed using a dictionary renderer with a custom style file. Use the drop-down menus to select a fields from the feature table to use their data as an override for the available renderer fields and see the result. Use the check-box to show and hide the text within the symbol.
+Run the app to see a restaurants layer displayed using a dictionary renderer with a custom style file. Use the drop-down menus to select fields from the feature table and to use their data as an override for the available renderer fields and see the result. Use the check-box to show and hide the text within the symbol.
 
 ## How it works
 
