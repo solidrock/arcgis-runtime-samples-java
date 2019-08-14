@@ -55,6 +55,7 @@ public class CustomDictionaryStyleController {
       // zoom to the extent of the feature layer once it has finished loading
       restaurantsFeatureLayer.addDoneLoadingListener(() -> mapView.setViewpointAsync(new Viewpoint(restaurantsFeatureLayer.getFullExtent())));
 
+      // wait for the feature table to load and get its fields
       restaurantsServiceFeatureTable.addDoneLoadingListener(() -> {
         List<Field> datasetFields = restaurantsServiceFeatureTable.getFields();
 
