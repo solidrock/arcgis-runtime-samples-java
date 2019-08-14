@@ -114,20 +114,6 @@ public class CustomDictionaryStyleController {
       put("rating", ratingComboBox.getSelectionModel().getSelectedItem());
       put("price", priceComboBox.getSelectionModel().getSelectedItem());
       put("name", nameComboBox.getSelectionModel().getSelectedItem());
-      put("opentimesun", "opensun");
-      put("closetimesun", "closesun");
-      put("opentimemon", "openmon");
-      put("closetimemon", "closemon");
-      put("opentimetue", "opentue");
-      put("closetimetue", "closetue");
-      put("opentimewed", "openwed");
-      put("closetimewed", "closewed");
-      put("opentimethu", "openthu");
-      put("closetimethu", "closethu");
-      put("opentimefri", "openfri");
-      put("closetimefri", "closefri");
-      put("opentimesat", "opensat");
-      put("closetimesat", "closesat");
     }};
 
     // create overrides for expected text field names (if any)
