@@ -14,20 +14,18 @@
   ~ License for the specific language governing permissions and limitations under
   ~ the License.
   -->
-<?import javafx.scene.layout.StackPane?>
-<?import com.esri.arcgisruntime.mapping.view.MapView?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.Background?>
-<?import javafx.scene.layout.BackgroundFill?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.paint.Color?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ProgressIndicator?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.Background?>
+<?import javafx.scene.layout.BackgroundFill?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.paint.Color?>
+<?import com.esri.arcgisruntime.mapping.view.MapView?>
 <StackPane fx:controller="com.esri.samples.custom_dictionary_style.CustomDictionaryStyleController"
            xmlns:fx="http://javafx.com/fxml" stylesheets="/style.css">
     <MapView fx:id="mapView"/>
@@ -62,6 +60,9 @@
                   GridPane.rowIndex="3"/>
         <Label text="Health Grade" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
         <ComboBox fx:id="healthGradeComboBox" onAction="#applyDictionaryRenderer" GridPane.columnIndex="1"
+                  GridPane.rowIndex="4"/>
+        <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+        <ComboBox fx:id="nameComboBox" onAction="#applyDictionaryRenderer" GridPane.columnIndex="1"
                   GridPane.rowIndex="5"/>
         <Separator GridPane.columnIndex="0"
                    GridPane.rowIndex="6" GridPane.columnSpan="2"/>
