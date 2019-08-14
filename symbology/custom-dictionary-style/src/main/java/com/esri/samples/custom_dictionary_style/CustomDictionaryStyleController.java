@@ -84,7 +84,7 @@ public class CustomDictionaryStyleController {
         foodStyleComboBox.getSelectionModel().select("Style");
         ratingComboBox.getSelectionModel().select("Rating");
         priceComboBox.getSelectionModel().select("Price");
-        healthGradeComboBox.getSelectionModel().select(" ");
+        healthGradeComboBox.getSelectionModel().select("Inspection");
         nameComboBox.getSelectionModel().select("Name");
 
         // add a listener to the combo boxes to apply the dictionary renderer whenever an item is selected
