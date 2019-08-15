@@ -97,6 +97,9 @@ public class CustomDictionaryStyleController {
     }
   }
 
+  /**
+   * Applies the selected overrides to the dictionary renderer.
+   */
   @FXML
   private void applyDictionaryRenderer() {
 
