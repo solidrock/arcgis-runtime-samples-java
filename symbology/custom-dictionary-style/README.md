@@ -6,20 +6,22 @@ Use a custom dictionary style (.stylx) to symbolize features using a variety of 
 
 ## Use case
 
-When symbolizing geoelements in your map, you might need to convey several pieces of information with a single symbol. You could try to symbolize such data using a unique value renderer, but as the number of fields and values increases, that approach becomes impractical. With a dictionary renderer you can build each symbol on-the-fly based on one or several attribute values and handle a nearly infinite number of unique combinations.
+When symbolizing geoelements in your map, you may need to convey several pieces of information with a single symbol. You could try to symbolize such data using a unique value renderer, but as the number of fields and values increases, that approach becomes impractical. With a dictionary renderer you can build each symbol on-the-fly driven one or more several attribute values and handle a nearly infinite number of unique combinations.
 
 ## How to use the sample
 
-Run the app to see a restaurants layer displayed using a dictionary renderer with a custom style file. Use the drop-down menus to select fields from the feature table and to use their data as an override for the available renderer fields and see the result. Use the check-box to show and hide the text within the symbol.
+Pan and zoom the map to see the symbology from the custom dictionary style.
 
 ## How it works
 
-1. Create a new `DictionarySymbolStyle` by passing in the path to the custom style (.stylx).
+
+1. Create a new `DictionarySymbolStyle` by passing in the path to the custom style file (.stylx).
 2. Define symbol attribute overrides (if any) using a collection of key-value pairs: `configured-attribute-name : override-attribute-name`.
 3. Define text attribute overrides (if any) using a collection of key-value pairs: `configured-attribute-name : override-attribute-name`.
 4. If necessary, provide new values for configuration settings defined in `DictionarySymbolStyle.getConfigurations()`.
-5. Create a new `DictionaryRenderer`, providing the `DictionarySymbolStyle` and (optionally) the collection of symbol and text attribute overrides.
+5. Create a new `DictionaryRenderer`, providing the DictionarySymbolStyle and (optionally) the collection of symbol and text attribute overrides.
 6. Apply the dictionary renderer to a feature layer or graphics overlay with the expected attributes.
+
 
 ## Relevant API
 
@@ -29,11 +31,11 @@ Run the app to see a restaurants layer displayed using a dictionary renderer wit
 
 ## About the data
 
-In this example, layer showing a subset of [restaurants in Redlands, CA](https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/Redlands_Restaurants/FeatureServer)  with attributes for rating, style, health score, and open hours is symbolized using a dictionary renderer that displays a single symbol for all of these variables. The renderer uses symbols from a custom dictionary style to show unique symbols based on several feature attributes. The symbols it contains were created using ArcGIS Pro.
+The layer showing a subset of [restaurants in Redlands, CA](https://services2.arcgis.com/ZQgQTuoyBrtmoGdP/arcgis/rest/services/Redlands_Restaurants/FeatureServer)  with attributes for rating, style, health score, and open hours is symbolized using a dictionary renderer that displays a single symbol for all of these variables. The renderer uses symbols from a [custom dictionary style](https://arcgisruntime.maps.arcgis.com/home/item.html?id=751138a2e0844e06853522d54103222a) to show unique symbols based on several feature attributes. The symbols it contains were created using ArcGIS Pro. The logic used to apply the symbols comes from an Arcade script embedded in the stylx file (which is a SQLite database), along with a JSON string that defines expected attribute names and configuration properties.
 
 ## Additional Information
 
-To learn more about how styles in dictionary renderers work, visit [ArcGIS Runtime SDK for Java - Display symbols from a style with a dictionary renderer](https://master-dev.developers.arcgis.com/java/latest/guide/display-military-symbols-with-a-dictionary-renderer.htm). For information about creating your own custom dictionary style, see the open source [dictionary-renderer-toolkit](https://esriurl.com/DictionaryToolkit). 
+To learn more about how styles in dictionary renderers work, visit [Display symbols from a style with a dictionary renderer](https://developers.arcgis.com/java/latest/guide/display-military-symbols-with-a-dictionary-renderer.htm). For information about creating your own custom dictionary style, see the open source [dictionary-renderer-toolkit](https://esriurl.com/DictionaryToolkit). 
 
 ## Tags
 
