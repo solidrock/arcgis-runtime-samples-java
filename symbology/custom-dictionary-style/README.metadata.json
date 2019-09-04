@@ -21,8 +21,6 @@
   ],
   "snippets": [
     "src/main/java/com/esri/samples/custom_dictionary_style/CustomDictionaryStyleSample.java",
-    "src/main/java/com/esri/samples/custom_dictionary_style/CustomDictionaryStyleController.java",
-    "src/resources/custom_dictionary_style.fxml"
   ],
   "title": "Custom dictionary style"
 }
