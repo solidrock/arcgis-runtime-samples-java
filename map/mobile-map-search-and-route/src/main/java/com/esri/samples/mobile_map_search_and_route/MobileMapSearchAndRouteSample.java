@@ -109,6 +109,11 @@ public class MobileMapSearchAndRouteSample extends Application {
           mapPackageListView.getItems().clear();
           mapView.setMap(null);
 
+          // if a previous mobile map package was open, close it before opening the next
+          if (mobileMapPackage != null){
+            mobileMapPackage.close();
+          }
+
           // create a mobile map package from the file path and load it
           mobileMapPackage = new MobileMapPackage(selectedMmpk.getAbsolutePath());
           mobileMapPackage.loadAsync();
