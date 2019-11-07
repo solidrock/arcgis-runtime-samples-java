@@ -1,0 +1,40 @@
+{
+    "category": "Network analysis",
+    "description": "Discover all the features participating in a subnetwork with subnetwork, upstream, and downstream trace types.",
+    "ignore": false,
+    "images": [
+        "SubnetworkTrace.png"
+    ],
+    "keywords": [
+        "condition barriers",
+        "downstream trace",
+        "network analysis",
+        "trace configuration",
+        "traversability",
+        "upstream trace",
+        "utility network",
+        "validate consistency",
+        "subnetwork trace"
+    ],
+    "relevant_apis": [
+        "FractionAlong",
+        "UtilityAssetType",
+        "UtilityDomainNetwork",
+        "UtilityElement",
+        "UtilityElementTraceResult",
+        "UtilityNetwork",
+        "UtilityNetworkDefinition",
+        "UtilityNetworkSource",
+        "UtilityTerminal",
+        "UtilityTier",
+        "UtilityTraceConfiguration",
+        "UtilityTraceParameters",
+        "UtilityTraceResult",
+        "UtilityTraceType",
+        "UtilityTraversability"
+    ],
+    "snippets": [
+        "src/main/java/com/esri/samples/closest_facility/ClosestFacilitySample.java"
+    ],
+    "title": "Trace a subnetwork"
+}
