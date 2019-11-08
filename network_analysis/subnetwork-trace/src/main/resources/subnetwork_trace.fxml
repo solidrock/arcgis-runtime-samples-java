@@ -28,6 +28,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Separator?>
 <StackPane
         fx:controller="com.esri.samples.subnetwork_trace.SubnetworkTraceController"
         xmlns:fx="http://javafx.com/fxml" stylesheets="style.css">
@@ -59,9 +60,13 @@
         </RadioButton>
         <RadioButton toggleGroup="$toggleGroup" text="Add Barrier(s)"/>
 
+        <Separator/>
+
         <ComboBox fx:id="traceTypeComboBox" StackPane.alignment="CENTER" promptText="trace type"/>
         <ComboBox fx:id="sourceTierComboBox" StackPane.alignment="CENTER" promptText="source tier"/>
         <ComboBox fx:id="targetTierComboBox" StackPane.alignment="CENTER" promptText="target tier"/>
+
+        <Separator/>
 
         <Button fx:id="traceButton" text="Trace" onAction="#handleTraceClick" disable="true"/>
         <Button fx:id="resetButton" text="Reset" onAction="#handleResetClick" disable="true"/>
