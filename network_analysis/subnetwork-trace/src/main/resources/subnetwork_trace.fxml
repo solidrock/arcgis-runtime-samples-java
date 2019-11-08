@@ -16,19 +16,16 @@
   -->
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressIndicator?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.Background?>
 <?import javafx.scene.layout.BackgroundFill?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import com.esri.arcgisruntime.mapping.view.MapView?>
+<?import javafx.scene.control.Button?>
 <StackPane
         fx:controller="com.esri.samples.subnetwork_trace.SubnetworkTraceController"
         xmlns:fx="http://javafx.com/fxml" stylesheets="style.css">
@@ -53,17 +50,13 @@
             </Background>
         </background>
 
-        <RadioButton fx:id="addingStartRadioButton" text="Add Starting Location(s)" selected="true">
-            <toggleGroup>
-                <ToggleGroup fx:id="toggleGroup"/>
-            </toggleGroup>
-        </RadioButton>
-        <RadioButton fx:id="addingBarrierRadioButton" toggleGroup="$toggleGroup" text="Add Barriers(s)"/>
-        <Separator/>
-        <HBox alignment="CENTER" spacing="10">
-            <Button fx:id="traceButton" text="Trace" onAction="#handleTraceClick" disable="true"/>
-            <Button fx:id="resetButton" text="Reset" onAction="#handleResetClick" disable="true"/>
-        </HBox>
+        <ComboBox fx:id="traceTypeComboBox" StackPane.alignment="CENTER" promptText="trace type"/>
+        <ComboBox fx:id="sourceTierComboBox" StackPane.alignment="CENTER" promptText="source tier"/>
+        <ComboBox fx:id="targetTierComboBox" StackPane.alignment="CENTER" promptText="target tier"/>
+
+        <Button fx:id="traceButton" text="Trace" onAction="#handleTraceClick" disable="true"/>
+        <Button fx:id="resetButton" text="Reset" onAction="#handleResetClick" disable="true"/>
+
         <Label fx:id="statusLabel" StackPane.alignment="CENTER" text="Loading Utility Network..."/>
     </VBox>
 </StackPane>
