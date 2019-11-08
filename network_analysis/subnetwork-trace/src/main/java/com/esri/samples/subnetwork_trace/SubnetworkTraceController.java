@@ -37,6 +37,7 @@ import javafx.scene.paint.Color;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
+import com.esri.arcgisruntime.data.FeatureQueryResult;
 import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
@@ -437,9 +438,12 @@ public class SubnetworkTraceController {
                     if (networkSourceName.equals(featureTableName)) {
                       queryParameters.getObjectIds().add(utilityElement.getObjectId());
                     }
+                  });
 
-                    // select features that match the query
-                    ((FeatureLayer) layer).selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW);
+                  // select features that match the query
+                  ListenableFuture<FeatureQueryResult> featureQueryResultListenableFuture = ((FeatureLayer) layer).selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW);
+                  featureQueryResultListenableFuture.addDoneListener(()->{
+                    progressIndicator.setVisible(false);
                   });
                 }
               });
