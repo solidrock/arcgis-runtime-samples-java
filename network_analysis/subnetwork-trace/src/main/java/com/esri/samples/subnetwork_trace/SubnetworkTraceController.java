@@ -18,6 +18,7 @@ package com.esri.samples.subnetwork_trace;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -37,6 +38,7 @@ import javafx.scene.paint.Color;
 
 import com.esri.arcgisruntime.concurrent.ListenableFuture;
 import com.esri.arcgisruntime.data.ArcGISFeature;
+import com.esri.arcgisruntime.data.QueryParameters;
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
 import com.esri.arcgisruntime.geometry.Envelope;
 import com.esri.arcgisruntime.geometry.GeometryEngine;
@@ -46,6 +48,7 @@ import com.esri.arcgisruntime.geometry.Polyline;
 import com.esri.arcgisruntime.geometry.ProximityResult;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.layers.FeatureLayer;
+import com.esri.arcgisruntime.layers.Layer;
 import com.esri.arcgisruntime.layers.LayerContent;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -64,11 +67,13 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityAssetGroup;
 import com.esri.arcgisruntime.utilitynetworks.UtilityAssetType;
 import com.esri.arcgisruntime.utilitynetworks.UtilityDomainNetwork;
 import com.esri.arcgisruntime.utilitynetworks.UtilityElement;
+import com.esri.arcgisruntime.utilitynetworks.UtilityElementTraceResult;
 import com.esri.arcgisruntime.utilitynetworks.UtilityNetwork;
 import com.esri.arcgisruntime.utilitynetworks.UtilityNetworkSource;
 import com.esri.arcgisruntime.utilitynetworks.UtilityTerminal;
 import com.esri.arcgisruntime.utilitynetworks.UtilityTier;
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters;
+import com.esri.arcgisruntime.utilitynetworks.UtilityTraceResult;
 import com.esri.arcgisruntime.utilitynetworks.UtilityTraceType;
 
 public class SubnetworkTraceController {
@@ -77,16 +82,11 @@ public class SubnetworkTraceController {
   @FXML private ComboBox<UtilityTraceType> traceTypeComboBox;
   @FXML private ComboBox<UtilityTier> sourceTierComboBox;
   @FXML private ComboBox<UtilityTier> targetTierComboBox;
-  @FXML
-  private Button resetButton;
-  @FXML
-  private Button traceButton;
-  @FXML
-  private Label statusLabel;
-  @FXML
-  private MapView mapView;
-  @FXML
-  private ProgressIndicator progressIndicator;
+  @FXML private Button resetButton;
+  @FXML private Button traceButton;
+  @FXML private Label statusLabel;
+  @FXML private MapView mapView;
+  @FXML private ProgressIndicator progressIndicator;
 
   private ArrayList<UtilityElement> barriers;
   private ArrayList<UtilityElement> startingLocations;
@@ -160,9 +160,8 @@ public class SubnetworkTraceController {
             sourceTierComboBox.getSelectionModel().select(0);
           }
 
-
           // enable the UI
-          enableUI();
+          enableButtonInteraction();
 
           // update the status text
           statusLabel.setText("Click on the network lines or points to add a utility element.");
@@ -357,18 +356,141 @@ public class SubnetworkTraceController {
     statusLabel.setText("Terminal: " + terminalName);
   }
 
-  private void enableUI() {
+  /**
+   * Enables both buttons and hides the progress indicator.
+   */
+  private void enableButtonInteraction() {
+
+    // enable the UI
+    traceButton.setDisable(false);
+    resetButton.setDisable(false);
   }
 
   @FXML
   private void handleTraceClick() {
+    try {
+      // check that the utility trace parameters are valid
+      if (startingLocations.isEmpty()) {
+        new Alert(Alert.AlertType.ERROR, "No starting locations provided for trace.").show();
+        return;
+      }
 
-    progressIndicator.setVisible(false);
+      // show the progress indicator and update the status text
+      progressIndicator.setVisible(true);
+      statusLabel.setText("Finding connected features...");
+
+      // disable the UI
+      traceButton.setDisable(true);
+      resetButton.setDisable(true);
+
+      // clear the previous selection from the layers
+      for (Layer layer : mapView.getMap().getOperationalLayers()) {
+        if (layer instanceof FeatureLayer) {
+          ((FeatureLayer) layer).clearSelection();
+        }
+      }
+
+      // create utility trace parameters for the selected trace type
+      UtilityTraceParameters utilityTraceParameters =
+        new UtilityTraceParameters(traceTypeComboBox.getValue(), startingLocations);
+
+      // if any barriers have been created, add them to the parameters
+      if (!barriers.isEmpty()) {
+        utilityTraceParameters.getBarriers().addAll(barriers);
+      }
+
+      if (sourceTierComboBox.getValue() != null) {
+        // Domain Network, Source/Target Tier, and Traversability will all be set as configured on server
+        utilityTraceParameters.setTraceConfiguration(sourceTierComboBox.getValue().getTraceConfiguration());
+      }
+
+      // run the utility trace and get the results
+      ListenableFuture<List<UtilityTraceResult>> utilityTraceResultsFuture =
+        utilityNetwork.traceAsync(utilityTraceParameters);
+      utilityTraceResultsFuture.addDoneListener(() -> {
+        try {
+
+          List<UtilityTraceResult> utilityTraceResults = utilityTraceResultsFuture.get();
+
+          if (utilityTraceResults.get(0) instanceof UtilityElementTraceResult) {
+            UtilityElementTraceResult utilityElementTraceResult =
+              (UtilityElementTraceResult) utilityTraceResults.get(0);
+
+            if (!utilityElementTraceResult.getElements().isEmpty()) {
+              // clear the previous selection from the layer
+              mapView.getMap().getOperationalLayers().forEach(layer -> {
+                if (layer instanceof FeatureLayer) {
+                  ((FeatureLayer) layer).clearSelection();
+                }
+              });
+
+              // iterate through the map's feature layers
+              mapView.getMap().getOperationalLayers().forEach(layer -> {
+                if (layer instanceof FeatureLayer){
+
+                  // create query parameters to select features that have an object ID matching the utility elements returned by the trace
+                  QueryParameters queryParameters = new QueryParameters();
+                  utilityElementTraceResult.getElements().forEach(utilityElement->{
+                    if (utilityElement.getNetworkSource()
+                      .getName()
+                      .equals(((FeatureLayer) layer).getFeatureTable().getTableName())){
+                      queryParameters.getObjectIds().add(utilityElement.getObjectId());
+                    }
+
+                    ((FeatureLayer) layer).selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW);
+                  });
+                }
+              });
+
+            }
+          } else {
+            statusLabel.setText("Trace failed.");
+            new Alert(Alert.AlertType.ERROR, "Trace result not a utility element.").show();
+          }
+
+          // enable the UI
+          enableButtonInteraction();
+
+          // hide the progress indicator
+          progressIndicator.setVisible(false);
+        } catch (Exception e) {
+          statusLabel.setText("Trace failed.");
+          new Alert(Alert.AlertType.ERROR, "Error running utility network connected trace.").show();
+        }
+      });
+
+    } catch (Exception e) {
+      statusLabel.setText("Trace failed.");
+      new Alert(Alert.AlertType.ERROR, "Error running utility network connected trace.").show();
+    }
   }
 
+  /**
+   * Resets the sample by resetting the status text, hiding the progress indicator, clearing the trace parameters,
+   * de-selecting all features and removing any graphics.
+   */
   @FXML
   private void handleResetClick() {
+    statusLabel.setText("Click on the network lines or points to add a utility element.");
+    progressIndicator.setVisible(false);
 
+    // clear the utility trace parameters
+    startingLocations.clear();
+    barriers.clear();
+    utilityTraceParameters = null;
+
+    // clear any selected features in all map layers
+    mapView.getMap().getOperationalLayers().forEach(layer -> {
+      if (layer instanceof FeatureLayer) {
+        ((FeatureLayer) layer).clearSelection();
+      }
+    });
+
+    // clear the graphics overlay
+    graphicsOverlay.getGraphics().clear();
+
+    // enable the trace button
+    traceButton.setDisable(false);
   }
 
   /**
