@@ -408,12 +408,10 @@ public class SubnetworkTraceController {
         utilityNetwork.traceAsync(utilityTraceParameters);
       utilityTraceResultsFuture.addDoneListener(() -> {
         try {
-
           List<UtilityTraceResult> utilityTraceResults = utilityTraceResultsFuture.get();
 
           if (utilityTraceResults.get(0) instanceof UtilityElementTraceResult) {
-            UtilityElementTraceResult utilityElementTraceResult =
-              (UtilityElementTraceResult) utilityTraceResults.get(0);
+            UtilityElementTraceResult utilityElementTraceResult = (UtilityElementTraceResult) utilityTraceResults.get(0);
 
             if (!utilityElementTraceResult.getElements().isEmpty()) {
               // clear the previous selection from the layer
@@ -427,8 +425,7 @@ public class SubnetworkTraceController {
               mapView.getMap().getOperationalLayers().forEach(layer -> {
                 if (layer instanceof FeatureLayer) {
 
-                  // create query parameters to find features who's network source name matches the layer's feature
-                  // table name
+                  // create query parameters to find features who's network source name matches the layer's feature table name
                   QueryParameters queryParameters = new QueryParameters();
                   utilityElementTraceResult.getElements().forEach(utilityElement -> {
 
@@ -441,37 +438,36 @@ public class SubnetworkTraceController {
                   });
 
                   // select features that match the query
-                  ListenableFuture<FeatureQueryResult> featureQueryResultListenableFuture = ((FeatureLayer) layer).selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW);
-                  featureQueryResultListenableFuture.addDoneListener(()->{
+                  ListenableFuture<FeatureQueryResult> featureQueryResultListenableFuture =
+                    ((FeatureLayer) layer).selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW);
+
+                  // wait for the selection to finish
+                  featureQueryResultListenableFuture.addDoneListener(() -> {
+                    // update the status text, enable the buttons and hide the progress indicator
+                    statusLabel.setText("Trace completed.");
+                    enableButtonInteraction();
                     progressIndicator.setVisible(false);
                   });
                 }
               });
-
-              // update the status text, enable the buttons and hide the progress indicator
-              statusLabel.setText("Trace completed.");
-              enableButtonInteraction();
-              progressIndicator.setVisible(false);
-
             }
           } else {
             statusLabel.setText("Trace failed.");
+            enableButtonInteraction();
+            progressIndicator.setVisible(false);
             new Alert(Alert.AlertType.ERROR, "Trace result not a utility element.").show();
           }
-
-          // enable the UI
-          enableButtonInteraction();
-
-          // hide the progress indicator
-          progressIndicator.setVisible(false);
-        } catch (Exception e) {
+        } catch (InterruptedException | ExecutionException e) {
           statusLabel.setText("Trace failed.");
+          enableButtonInteraction();
+          progressIndicator.setVisible(false);
           new Alert(Alert.AlertType.ERROR, "Error running utility network connected trace.").show();
         }
       });
-
     } catch (Exception e) {
       statusLabel.setText("Trace failed.");
+      enableButtonInteraction();
+      progressIndicator.setVisible(false);
       new Alert(Alert.AlertType.ERROR, "Error running utility network connected trace.").show();
     }
   }
