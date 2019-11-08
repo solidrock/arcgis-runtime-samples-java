@@ -357,7 +357,7 @@ public class SubnetworkTraceController {
   }
 
   /**
-   * Enables both buttons and hides the progress indicator.
+   * Enables both buttons.
    */
   private void enableButtonInteraction() {
 
