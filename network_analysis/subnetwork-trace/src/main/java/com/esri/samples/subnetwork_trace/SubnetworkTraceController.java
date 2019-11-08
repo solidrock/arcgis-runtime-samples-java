@@ -18,7 +18,6 @@ package com.esri.samples.subnetwork_trace;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -81,7 +80,6 @@ public class SubnetworkTraceController {
   @FXML private RadioButton startingLocationsRadioButton;
   @FXML private ComboBox<UtilityTraceType> traceTypeComboBox;
   @FXML private ComboBox<UtilityTier> sourceTierComboBox;
-  @FXML private ComboBox<UtilityTier> targetTierComboBox;
   @FXML private Button resetButton;
   @FXML private Button traceButton;
   @FXML private Label statusLabel;
@@ -110,7 +108,8 @@ public class SubnetworkTraceController {
           SpatialReferences.getWebMercator())));
 
       // create symbols for the starting point and barriers
-      startingPointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, ColorUtil.colorToArgb(Color.GREEN), 20);
+      startingPointSymbol =
+        new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, ColorUtil.colorToArgb(Color.GREEN), 20);
       barrierPointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.X, ColorUtil.colorToArgb(Color.RED), 20);
 
       // load the utility network data from the feature service and create feature layers
@@ -391,8 +390,7 @@ public class SubnetworkTraceController {
       }
 
       // create utility trace parameters for the selected trace type
-      UtilityTraceParameters utilityTraceParameters =
-        new UtilityTraceParameters(traceTypeComboBox.getValue(), startingLocations);
+      utilityTraceParameters = new UtilityTraceParameters(traceTypeComboBox.getValue(), startingLocations);
 
       // if any barriers have been created, add them to the parameters
       if (!barriers.isEmpty()) {
@@ -426,21 +424,30 @@ public class SubnetworkTraceController {
 
               // iterate through the map's feature layers
               mapView.getMap().getOperationalLayers().forEach(layer -> {
-                if (layer instanceof FeatureLayer){
+                if (layer instanceof FeatureLayer) {
 
-                  // create query parameters to select features that have an object ID matching the utility elements returned by the trace
+                  // create query parameters to find features who's network source name matches the layer's feature
+                  // table name
                   QueryParameters queryParameters = new QueryParameters();
-                  utilityElementTraceResult.getElements().forEach(utilityElement->{
-                    if (utilityElement.getNetworkSource()
-                      .getName()
-                      .equals(((FeatureLayer) layer).getFeatureTable().getTableName())){
+                  utilityElementTraceResult.getElements().forEach(utilityElement -> {
+
+                    String networkSourceName = utilityElement.getNetworkSource().getName();
+                    String featureTableName = ((FeatureLayer) layer).getFeatureTable().getTableName();
+
+                    if (networkSourceName.equals(featureTableName)) {
                       queryParameters.getObjectIds().add(utilityElement.getObjectId());
                     }
 
+                    // select features that match the query
                     ((FeatureLayer) layer).selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW);
                   });
                 }
               });
+
+              // update the status text, enable the buttons and hide the progress indicator
+              statusLabel.setText("Trace completed.");
+              enableButtonInteraction();
+              progressIndicator.setVisible(false);
 
             }
           } else {
