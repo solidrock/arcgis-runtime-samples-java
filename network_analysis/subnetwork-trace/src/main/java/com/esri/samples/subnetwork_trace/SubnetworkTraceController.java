@@ -24,7 +24,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.RadioButton;
 import javafx.scene.paint.Color;
 
 import com.esri.arcgisruntime.data.ServiceFeatureTable;
@@ -47,11 +46,16 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityTraceParameters;
 
 public class SubnetworkTraceController {
 
-  @FXML private Button resetButton;
-  @FXML private Button traceButton;
-  @FXML private Label statusLabel;
-  @FXML private MapView mapView;
-  @FXML private ProgressIndicator progressIndicator;
+  @FXML
+  private Button resetButton;
+  @FXML
+  private Button traceButton;
+  @FXML
+  private Label statusLabel;
+  @FXML
+  private MapView mapView;
+  @FXML
+  private ProgressIndicator progressIndicator;
 
   private ArrayList<UtilityElement> barriers;
   private ArrayList<UtilityElement> startingLocations;
@@ -104,7 +108,6 @@ public class SubnetworkTraceController {
       utilityNetwork.addDoneLoadingListener(() -> {
 
         if (utilityNetwork.getLoadStatus() == LoadStatus.LOADED) {
-
 
 
           // enable the UI
