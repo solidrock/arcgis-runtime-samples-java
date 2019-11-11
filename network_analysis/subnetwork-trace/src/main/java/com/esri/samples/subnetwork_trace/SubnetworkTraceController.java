@@ -97,6 +97,7 @@ public class SubnetworkTraceController {
 
   public void initialize() {
     try {
+      // show the progress indicator and set the status label
       progressIndicator = new ProgressIndicator();
       progressIndicator.setVisible(true);
       statusLabel.setText("Loading Utility Network...");
@@ -108,7 +109,8 @@ public class SubnetworkTraceController {
         new Envelope(-9813547.35557238, 5129980.36635111, -9813185.0602376, 5130215.41254146,
           SpatialReferences.getWebMercator())));
 
-      // create symbols for the starting point and barriers
+      // create symbols for the starting point and barriers: a green cross for the starting point, and a red X for
+      // barriers
       startingPointSymbol =
         new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, ColorUtil.colorToArgb(Color.GREEN), 20);
       barrierPointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.X, ColorUtil.colorToArgb(Color.RED), 20);
@@ -137,7 +139,7 @@ public class SubnetworkTraceController {
       // set the map view's selection color
       mapView.getSelectionProperties().setColor(0xFFFFFF00);
 
-      // create a list of starting locations for the trace
+      // create a list of starting locations and barriers for the trace
       startingLocations = new ArrayList<>();
       barriers = new ArrayList<>();
 
@@ -160,14 +162,16 @@ public class SubnetworkTraceController {
             sourceTierComboBox.getSelectionModel().select(0);
           }
 
-          // enable the UI
+          // enable the UI and hide the progress indicator
           enableButtonInteraction();
+          progressIndicator.setVisible(false);
 
           // update the status text
           statusLabel.setText("Click on the network lines or points to add a utility element.");
 
         } else {
           new Alert(Alert.AlertType.ERROR, "Error loading Utility Network.").show();
+          statusLabel.setText("Error loading Utility Network.");
         }
       });
 
@@ -189,8 +193,9 @@ public class SubnetworkTraceController {
   private void handleMapViewClicked(MouseEvent e) {
     if (e.getButton() == MouseButton.PRIMARY && e.isStillSincePress()) {
 
-      // show the progress indicator
+      // show the progress indicator and set the status label
       progressIndicator.setVisible(true);
+      statusLabel.setText("Identifying trace locations...");
 
       // set whether the user is adding a starting point or a barrier
       boolean isAddingStartingPoint = startingLocationsRadioButton.isSelected();
@@ -370,100 +375,102 @@ public class SubnetworkTraceController {
   private void handleTraceClick() {
     try {
       // check that the utility trace parameters are valid
-      if (startingLocations.isEmpty()) {
-        new Alert(Alert.AlertType.ERROR, "No starting locations provided for trace.").show();
-        return;
-      }
+      if (!startingLocations.isEmpty()) {
 
-      // show the progress indicator and update the status text
-      progressIndicator.setVisible(true);
-      statusLabel.setText("Finding connected features...");
+        // show the progress indicator and update the status text
+        progressIndicator.setVisible(true);
+        statusLabel.setText("Finding connected features...");
 
-      // disable the UI
-      traceButton.setDisable(true);
-      resetButton.setDisable(true);
+        // disable the UI
+        traceButton.setDisable(true);
+        resetButton.setDisable(true);
 
-      // clear the previous selection from the layers
-      for (Layer layer : mapView.getMap().getOperationalLayers()) {
-        if (layer instanceof FeatureLayer) {
-          ((FeatureLayer) layer).clearSelection();
+        // clear the previous selection from the layers
+        for (Layer layer : mapView.getMap().getOperationalLayers()) {
+          if (layer instanceof FeatureLayer) {
+            ((FeatureLayer) layer).clearSelection();
+          }
         }
-      }
 
-      // create utility trace parameters for the selected trace type
-      utilityTraceParameters = new UtilityTraceParameters(traceTypeComboBox.getValue(), startingLocations);
+        // create utility trace parameters for the selected trace type
+        utilityTraceParameters = new UtilityTraceParameters(traceTypeComboBox.getValue(), startingLocations);
 
-      // if any barriers have been created, add them to the parameters
-      if (!barriers.isEmpty()) {
-        utilityTraceParameters.getBarriers().addAll(barriers);
-      }
+        // if any barriers have been created, add them to the parameters
+        if (!barriers.isEmpty()) {
+          utilityTraceParameters.getBarriers().addAll(barriers);
+        }
 
-      if (sourceTierComboBox.getValue() != null) {
-        // Domain Network, Source/Target Tier, and Traversability will all be set as configured on server
-        utilityTraceParameters.setTraceConfiguration(sourceTierComboBox.getValue().getTraceConfiguration());
-      }
+        if (sourceTierComboBox.getValue() != null) {
+          // Domain Network, Source/Target Tier, and Traversability will all be set as configured on server
+          utilityTraceParameters.setTraceConfiguration(sourceTierComboBox.getValue().getTraceConfiguration());
+        }
 
-      // run the utility trace and get the results
-      ListenableFuture<List<UtilityTraceResult>> utilityTraceResultsFuture =
-        utilityNetwork.traceAsync(utilityTraceParameters);
-      utilityTraceResultsFuture.addDoneListener(() -> {
-        try {
-          List<UtilityTraceResult> utilityTraceResults = utilityTraceResultsFuture.get();
+        // run the utility trace and get the results
+        ListenableFuture<List<UtilityTraceResult>> utilityTraceResultsFuture =
+          utilityNetwork.traceAsync(utilityTraceParameters);
+        utilityTraceResultsFuture.addDoneListener(() -> {
+          try {
+            List<UtilityTraceResult> utilityTraceResults = utilityTraceResultsFuture.get();
 
-          if (utilityTraceResults.get(0) instanceof UtilityElementTraceResult) {
-            UtilityElementTraceResult utilityElementTraceResult = (UtilityElementTraceResult) utilityTraceResults.get(0);
+            if (utilityTraceResults.get(0) instanceof UtilityElementTraceResult) {
+              UtilityElementTraceResult utilityElementTraceResult =
+                (UtilityElementTraceResult) utilityTraceResults.get(0);
 
-            if (!utilityElementTraceResult.getElements().isEmpty()) {
-              // clear the previous selection from the layer
-              mapView.getMap().getOperationalLayers().forEach(layer -> {
-                if (layer instanceof FeatureLayer) {
-                  ((FeatureLayer) layer).clearSelection();
-                }
-              });
+              if (!utilityElementTraceResult.getElements().isEmpty()) {
+                // clear the previous selection from the layer
+                mapView.getMap().getOperationalLayers().forEach(layer -> {
+                  if (layer instanceof FeatureLayer) {
+                    ((FeatureLayer) layer).clearSelection();
+                  }
+                });
 
-              // iterate through the map's feature layers
-              mapView.getMap().getOperationalLayers().forEach(layer -> {
-                if (layer instanceof FeatureLayer) {
+                // iterate through the map's feature layers
+                mapView.getMap().getOperationalLayers().forEach(layer -> {
+                  if (layer instanceof FeatureLayer) {
 
-                  // create query parameters to find features who's network source name matches the layer's feature table name
-                  QueryParameters queryParameters = new QueryParameters();
-                  utilityElementTraceResult.getElements().forEach(utilityElement -> {
+                    // create query parameters to find features who's network source name matches the layer's feature
+                    // table name
+                    QueryParameters queryParameters = new QueryParameters();
+                    utilityElementTraceResult.getElements().forEach(utilityElement -> {
 
-                    String networkSourceName = utilityElement.getNetworkSource().getName();
-                    String featureTableName = ((FeatureLayer) layer).getFeatureTable().getTableName();
+                      String networkSourceName = utilityElement.getNetworkSource().getName();
+                      String featureTableName = ((FeatureLayer) layer).getFeatureTable().getTableName();
 
-                    if (networkSourceName.equals(featureTableName)) {
-                      queryParameters.getObjectIds().add(utilityElement.getObjectId());
-                    }
-                  });
+                      if (networkSourceName.equals(featureTableName)) {
+                        queryParameters.getObjectIds().add(utilityElement.getObjectId());
+                      }
+                    });
 
-                  // select features that match the query
-                  ListenableFuture<FeatureQueryResult> featureQueryResultListenableFuture =
-                    ((FeatureLayer) layer).selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW);
+                    // select features that match the query
+                    ListenableFuture<FeatureQueryResult> featureQueryResultListenableFuture =
+                      ((FeatureLayer) layer).selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW);
 
-                  // wait for the selection to finish
-                  featureQueryResultListenableFuture.addDoneListener(() -> {
-                    // update the status text, enable the buttons and hide the progress indicator
-                    statusLabel.setText("Trace completed.");
-                    enableButtonInteraction();
-                    progressIndicator.setVisible(false);
-                  });
-                }
-              });
+                    // wait for the selection to finish
+                    featureQueryResultListenableFuture.addDoneListener(() -> {
+                      // update the status text, enable the buttons and hide the progress indicator
+                      statusLabel.setText("Trace completed.");
+                      enableButtonInteraction();
+                      progressIndicator.setVisible(false);
+                    });
+                  }
+                });
+              }
+            } else {
+              statusLabel.setText("Trace failed.");
+              enableButtonInteraction();
+              progressIndicator.setVisible(false);
+              new Alert(Alert.AlertType.ERROR, "Trace result not a utility element.").show();
             }
-          } else {
+          } catch (InterruptedException | ExecutionException e) {
             statusLabel.setText("Trace failed.");
             enableButtonInteraction();
             progressIndicator.setVisible(false);
-            new Alert(Alert.AlertType.ERROR, "Trace result not a utility element.").show();
+            new Alert(Alert.AlertType.ERROR, "Error running utility network connected trace.").show();
           }
-        } catch (InterruptedException | ExecutionException e) {
-          statusLabel.setText("Trace failed.");
-          enableButtonInteraction();
-          progressIndicator.setVisible(false);
-          new Alert(Alert.AlertType.ERROR, "Error running utility network connected trace.").show();
-        }
-      });
+        });
+      } else {
+        new Alert(Alert.AlertType.ERROR, "No starting locations provided for trace.").show();
+      }
     } catch (Exception e) {
       statusLabel.setText("Trace failed.");
       enableButtonInteraction();
@@ -495,6 +502,10 @@ public class SubnetworkTraceController {
 
     // clear the graphics overlay
     graphicsOverlay.getGraphics().clear();
+
+    // reset the combobox selection to default
+    traceTypeComboBox.getSelectionModel().select(0);
+    sourceTierComboBox.getSelectionModel().select(0);
 
     // enable the trace button
     traceButton.setDisable(false);

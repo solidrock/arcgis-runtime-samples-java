@@ -33,7 +33,7 @@
         fx:controller="com.esri.samples.subnetwork_trace.SubnetworkTraceController"
         xmlns:fx="http://javafx.com/fxml" stylesheets="style.css">
     <!--SDK MapView-->
-    <MapView fx:id="mapView"/>
+    <MapView fx:id="mapView" onMouseClicked="#handleMapViewClicked"/>
     <ProgressIndicator fx:id="progressIndicator" StackPane.alignment="CENTER"/>
     <!--Controls Area-->
     <VBox StackPane.alignment="TOP_LEFT" maxWidth="200" maxHeight="200" styleClass="panel-region" spacing="10">
