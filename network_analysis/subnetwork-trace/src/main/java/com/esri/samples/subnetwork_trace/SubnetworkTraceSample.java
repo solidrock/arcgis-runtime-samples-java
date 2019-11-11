@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 
 public class SubnetworkTraceSample extends Application {
 
-  private SubnetworkTraceController controller;
+  private static SubnetworkTraceController controller;
 
   @Override
   public void start(Stage stage) throws Exception {
@@ -60,5 +60,4 @@ public class SubnetworkTraceSample extends Application {
 
     Application.launch(args);
   }
-
 }
