@@ -434,8 +434,8 @@ public class SubnetworkTraceController {
                       // create query parameters to find features who's network source name matches the layer's feature
                       // table name
                       QueryParameters queryParameters = new QueryParameters();
+                      
                       utilityElementTraceResult.getElements().forEach(utilityElement -> {
-
                         String networkSourceName = utilityElement.getNetworkSource().getName();
                         String featureTableName = ((FeatureLayer) layer).getFeatureTable().getTableName();
 
