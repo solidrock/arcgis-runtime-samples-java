@@ -27,13 +27,7 @@ public class TraceTypeListCell extends ListCell<UtilityTraceType> {
   @Override
   protected void updateItem(UtilityTraceType utilityTraceType, boolean empty) {
     super.updateItem(utilityTraceType, empty);
-    if (utilityTraceType != null) {
-
-      setText(utilityTraceType.toString());
-
-    } else {
-      setGraphic(null);
-      setText(null);
-    }
+    setText(empty || utilityTraceType == null ? null : utilityTraceType.toString());
+    setGraphic(null);
   }
 }

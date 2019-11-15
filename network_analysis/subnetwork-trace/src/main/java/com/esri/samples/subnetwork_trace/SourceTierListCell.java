@@ -27,13 +27,7 @@ public class SourceTierListCell extends ListCell<UtilityTier> {
   @Override
   protected void updateItem(UtilityTier utilityTier, boolean empty) {
     super.updateItem(utilityTier, empty);
-    if (utilityTier != null) {
-
-      setText(utilityTier.getName());
-
-    } else {
-      setGraphic(null);
-      setText(null);
-    }
+    setText(empty || utilityTier == null ? null : utilityTier.getName());
+    setGraphic(null);
   }
 }
