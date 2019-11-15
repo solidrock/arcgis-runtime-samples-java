@@ -115,6 +115,11 @@ public class SubnetworkTraceController {
         new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, ColorUtil.colorToArgb(Color.GREEN), 20);
       barrierPointSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.X, ColorUtil.colorToArgb(Color.RED), 20);
 
+      // use a cell factory which shows the utility trace type's name in the combo box
+      traceTypeComboBox.setCellFactory(c -> new TraceTypeListCell());
+      // use a cell factory which shows the utility source tiers's title
+      sourceTierComboBox.setCellFactory(c -> new SourceTierListCell());
+
       // load the utility network data from the feature service and create feature layers
       String featureServiceURL =
         "https://sampleserver7.arcgisonline.com/arcgis/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer";
@@ -155,7 +160,7 @@ public class SubnetworkTraceController {
             .addAll(UtilityTraceType.SUBNETWORK, UtilityTraceType.UPSTREAM, UtilityTraceType.DOWNSTREAM);
           traceTypeComboBox.getSelectionModel().select(0);
 
-          //add the tiers to the combobox
+          // add the tiers to the combobox
           List<UtilityDomainNetwork> domainNetworks = utilityNetwork.getDefinition().getDomainNetworks();
           domainNetworks.forEach(domain -> sourceTierComboBox.getItems().addAll(domain.getTiers()));
           if (!sourceTierComboBox.getItems().isEmpty()) {
