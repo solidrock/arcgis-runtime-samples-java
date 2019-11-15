@@ -116,11 +116,6 @@ public class SubnetworkTraceController {
       // use a cell factory which shows the utility source tiers's title
       sourceTierComboBox.setCellFactory(c -> new SourceTierListCell());
 
-      // add the trace type options to the combobox
-      traceTypeComboBox.getItems()
-          .addAll(UtilityTraceType.SUBNETWORK, UtilityTraceType.UPSTREAM, UtilityTraceType.DOWNSTREAM);
-      traceTypeComboBox.getSelectionModel().select(0);
-
       // load the utility network data from the feature service and create feature layers
       String featureServiceURL =
         "https://sampleserver7.arcgisonline.com/arcgis/rest/services/UtilityNetwork/NapervilleElectric/FeatureServer";
@@ -172,7 +167,7 @@ public class SubnetworkTraceController {
           progressIndicator.setVisible(false);
 
           // update the status text
-          statusLabel.setText("Click on the network lines or points to add a utility element.");
+          statusLabel.setText("");
 
         } else {
           new Alert(Alert.AlertType.ERROR, "Error loading Utility Network.").show();

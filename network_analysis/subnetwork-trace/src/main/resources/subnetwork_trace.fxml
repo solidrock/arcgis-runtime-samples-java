@@ -29,6 +29,7 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
 <StackPane
         fx:controller="com.esri.samples.subnetwork_trace.SubnetworkTraceController"
         xmlns:fx="http://javafx.com/fxml" stylesheets="style.css">
@@ -62,14 +63,18 @@
 
         <Separator/>
 
-        <ComboBox fx:id="traceTypeComboBox" StackPane.alignment="CENTER" promptText="trace type"/>
-        <ComboBox fx:id="sourceTierComboBox" StackPane.alignment="CENTER" promptText="source tier"/>
-        <ComboBox fx:id="targetTierComboBox" StackPane.alignment="CENTER" promptText="target tier"/>
+        <Label StackPane.alignment="CENTER_LEFT" text="Trace Type:"/>
+        <ComboBox fx:id="traceTypeComboBox" StackPane.alignment="CENTER"/>
+
+        <Label StackPane.alignment="CENTER_LEFT" text="Source Tier:"/>
+        <ComboBox fx:id="sourceTierComboBox" StackPane.alignment="CENTER"/>
 
         <Separator/>
 
-        <Button fx:id="traceButton" text="Trace" onAction="#handleTraceClick" disable="true"/>
-        <Button fx:id="resetButton" text="Reset" onAction="#handleResetClick" disable="true"/>
+        <HBox StackPane.alignment="CENTER" alignment="CENTER"  spacing="10">
+            <Button fx:id="traceButton" text="Trace" onAction="#handleTraceClick" disable="true"/>
+            <Button fx:id="resetButton" text="Reset" onAction="#handleResetClick" disable="true"/>
+        </HBox>
 
         <Label fx:id="statusLabel" StackPane.alignment="CENTER" text="Loading Utility Network..."/>
     </VBox>
