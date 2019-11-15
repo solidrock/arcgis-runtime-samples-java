@@ -97,10 +97,6 @@ public class SubnetworkTraceController {
 
   public void initialize() {
     try {
-      // show the progress indicator and set the status label
-      progressIndicator = new ProgressIndicator();
-      progressIndicator.setVisible(true);
-      statusLabel.setText("Loading Utility Network...");
 
       // create a basemap and set it to the map view
       ArcGISMap map = new ArcGISMap(Basemap.createStreetsNightVector());
@@ -416,61 +412,67 @@ public class SubnetworkTraceController {
         utilityTraceResultsFuture.addDoneListener(() -> {
           try {
             List<UtilityTraceResult> utilityTraceResults = utilityTraceResultsFuture.get();
+            if (!utilityTraceResults.isEmpty()) {
+              System.out.println(utilityTraceResults.size());
+              System.out.println(utilityTraceResults.get(0));
+              if (utilityTraceResults.get(0) instanceof UtilityElementTraceResult) {
+                UtilityElementTraceResult utilityElementTraceResult =
+                    (UtilityElementTraceResult) utilityTraceResults.get(0);
 
-            if (utilityTraceResults.get(0) instanceof UtilityElementTraceResult) {
-              UtilityElementTraceResult utilityElementTraceResult =
-                (UtilityElementTraceResult) utilityTraceResults.get(0);
+                if (!utilityElementTraceResult.getElements().isEmpty()) {
+                  // clear the previous selection from the layer
+                  mapView.getMap().getOperationalLayers().forEach(layer -> {
+                    if (layer instanceof FeatureLayer) {
+                      ((FeatureLayer) layer).clearSelection();
+                    }
+                  });
 
-              if (!utilityElementTraceResult.getElements().isEmpty()) {
-                // clear the previous selection from the layer
-                mapView.getMap().getOperationalLayers().forEach(layer -> {
-                  if (layer instanceof FeatureLayer) {
-                    ((FeatureLayer) layer).clearSelection();
-                  }
-                });
+                  // iterate through the map's feature layers
+                  mapView.getMap().getOperationalLayers().forEach(layer -> {
+                    if (layer instanceof FeatureLayer) {
 
-                // iterate through the map's feature layers
-                mapView.getMap().getOperationalLayers().forEach(layer -> {
-                  if (layer instanceof FeatureLayer) {
+                      // create query parameters to find features who's network source name matches the layer's feature
+                      // table name
+                      QueryParameters queryParameters = new QueryParameters();
+                      utilityElementTraceResult.getElements().forEach(utilityElement -> {
 
-                    // create query parameters to find features who's network source name matches the layer's feature
-                    // table name
-                    QueryParameters queryParameters = new QueryParameters();
-                    utilityElementTraceResult.getElements().forEach(utilityElement -> {
+                        String networkSourceName = utilityElement.getNetworkSource().getName();
+                        String featureTableName = ((FeatureLayer) layer).getFeatureTable().getTableName();
 
-                      String networkSourceName = utilityElement.getNetworkSource().getName();
-                      String featureTableName = ((FeatureLayer) layer).getFeatureTable().getTableName();
+                        if (networkSourceName.equals(featureTableName)) {
+                          queryParameters.getObjectIds().add(utilityElement.getObjectId());
+                        }
+                      });
 
-                      if (networkSourceName.equals(featureTableName)) {
-                        queryParameters.getObjectIds().add(utilityElement.getObjectId());
-                      }
-                    });
+                      // select features that match the query
+                      ListenableFuture<FeatureQueryResult> featureQueryResultListenableFuture =
+                          ((FeatureLayer) layer).selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW);
 
-                    // select features that match the query
-                    ListenableFuture<FeatureQueryResult> featureQueryResultListenableFuture =
-                      ((FeatureLayer) layer).selectFeaturesAsync(queryParameters, FeatureLayer.SelectionMode.NEW);
-
-                    // wait for the selection to finish
-                    featureQueryResultListenableFuture.addDoneListener(() -> {
-                      // update the status text, enable the buttons and hide the progress indicator
-                      statusLabel.setText("Trace completed.");
-                      enableButtonInteraction();
-                      progressIndicator.setVisible(false);
-                    });
-                  }
-                });
+                      // wait for the selection to finish
+                      featureQueryResultListenableFuture.addDoneListener(() -> {
+                        // update the status text, enable the buttons and hide the progress indicator
+                        statusLabel.setText("Trace completed.");
+                        enableButtonInteraction();
+                        progressIndicator.setVisible(false);
+                      });
+                    }
+                  });
+                }
+              } else {
+                statusLabel.setText("Trace failed.");
+                enableButtonInteraction();
+                progressIndicator.setVisible(false);
+                new Alert(Alert.AlertType.ERROR, "Trace result not a utility element.").show();
               }
             } else {
-              statusLabel.setText("Trace failed.");
-              enableButtonInteraction();
-              progressIndicator.setVisible(false);
-              new Alert(Alert.AlertType.ERROR, "Trace result not a utility element.").show();
+              new Alert(Alert.AlertType.ERROR, "Trace returned no results.").show();
             }
           } catch (InterruptedException | ExecutionException e) {
             statusLabel.setText("Trace failed.");
+            new Alert(Alert.AlertType.ERROR, "Error running utility network connected trace.").show();
+          } finally {
             enableButtonInteraction();
             progressIndicator.setVisible(false);
-            new Alert(Alert.AlertType.ERROR, "Error running utility network connected trace.").show();
           }
         });
       } else {
