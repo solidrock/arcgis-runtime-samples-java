@@ -393,7 +393,8 @@ public class SubnetworkTraceController {
         }
 
         // create utility trace parameters for the selected trace type
-        utilityTraceParameters = new UtilityTraceParameters(traceTypeComboBox.getValue(), startingLocations);
+        utilityTraceParameters = new UtilityTraceParameters(traceTypeComboBox.getValue(), new ArrayList<>());
+        utilityTraceParameters.getStartingLocations().addAll(startingLocations);
 
         // if any barriers have been created, add them to the parameters
         if (!barriers.isEmpty()) {
