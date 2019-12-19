@@ -16,15 +16,19 @@
 
 package com.esri.samples.configure_subnetwork_trace;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -55,11 +59,14 @@ import com.esri.arcgisruntime.utilitynetworks.UtilityTraversabilityScope;
 
 public class ConfigureSubnetworkTraceController {
 
-  @FXML private TextField comparisonValuesTextField;
+  public ComboBox<Boolean> comparisonValuesBooleanComboBox;
+  public TextField comparisonValuesNumberField;
+  @FXML private ComboBox<CodedValue> comparisonValuesChoicesComboBox;
+
   @FXML private CheckBox includeBarriersCheckBox;
   @FXML private CheckBox includeContainersCheckBox;
   @FXML private TextArea traceConditionsTextArea;
-  @FXML private ComboBox<CodedValue> comparisonValuesComboBox;
+
   @FXML private ComboBox<UtilityNetworkAttribute> comparisonSourcesComboBox;
   @FXML private ComboBox<UtilityAttributeComparisonOperator> comparisonOperatorsComboBox;
 
@@ -99,8 +106,8 @@ public class ConfigureSubnetworkTraceController {
           comparisonOperatorsComboBox.getSelectionModel().select(0);
 
           // display the name of the comparison values in the ComboBox
-          comparisonValuesComboBox.setButtonCell(new CodedValueListCell());
-          comparisonValuesComboBox.setCellFactory(c -> new CodedValueListCell());
+          comparisonValuesChoicesComboBox.setButtonCell(new CodedValueListCell());
+          comparisonValuesChoicesComboBox.setCellFactory(c -> new CodedValueListCell());
 
           // create a default starting location
           UtilityNetworkSource utilityNetworkSource =
@@ -151,13 +158,13 @@ public class ConfigureSubnetworkTraceController {
     Object otherValue;
     // if a comparison value is selected from the ComboBox, use it as the third parameter
     if (selectedAttribute.getDomain() instanceof CodedValueDomain &&
-        comparisonValuesComboBox.getSelectionModel().getSelectedItem() != null) {
+        comparisonValuesChoicesComboBox.getSelectionModel().getSelectedItem() != null) {
       // convert the selected comparison value to the data type defined by the selected attribute
-      otherValue = convertToDataType(comparisonValuesComboBox.getSelectionModel().getSelectedItem().getCode(),
+      otherValue = convertToDataType(comparisonValuesChoicesComboBox.getSelectionModel().getSelectedItem().getCode(),
           selectedAttribute.getDataType());
-    } else if (!comparisonValuesTextField.getText().equals("")) {
+    } else if (!comparisonValuesNumberField.getText().equals("")) {
       // otherwise, a comparison value will be specified as text input to be used as the third parameter
-      otherValue = convertToDataType(comparisonValuesTextField.getText(), selectedAttribute.getDataType());
+      otherValue = convertToDataType(comparisonValuesNumberField.getText(), selectedAttribute.getDataType());
     } else {
       new Alert(Alert.AlertType.WARNING, "No valid comparison value entered").show();
       return;
@@ -334,29 +341,42 @@ public class ConfigureSubnetworkTraceController {
   private void onComparisonSourceChanged() {
 
     // clear any previous text input
-    comparisonValuesTextField.clear();
+    comparisonValuesNumberField.clear();
 
     if (comparisonSourcesComboBox.getSelectionModel().getSelectedItem() != null) {
 
       // determine if we need to show a selection of values in the combo box, or a text entry field
       UtilityNetworkAttribute selectedAttribute = comparisonSourcesComboBox.getSelectionModel().getSelectedItem();
+
       if (selectedAttribute.getDomain() instanceof CodedValueDomain) {
 
         // populate and show the comparison values combo box
         List<CodedValue> comparisonValues = ((CodedValueDomain) selectedAttribute.getDomain()).getCodedValues();
-        comparisonValuesComboBox.getItems().clear();
-        comparisonValuesComboBox.getItems().addAll(comparisonValues);
-        comparisonValuesComboBox.getSelectionModel().select(0);
+        comparisonValuesChoicesComboBox.getItems().clear();
+        comparisonValuesChoicesComboBox.getItems().addAll(comparisonValues);
+        comparisonValuesChoicesComboBox.getSelectionModel().select(0);
+        showElement(comparisonValuesChoicesComboBox);
 
       } else {
-        comparisonValuesComboBox.getItems().clear();
+        switch (selectedAttribute.getDataType()){
+          case BOOLEAN:
+            showElement(comparisonValuesBooleanComboBox);
+            break;
+          case DOUBLE:
+          case FLOAT:
+          case INTEGER:
+            showElement(comparisonValuesNumberField);
+            break;
+        }
       }
-
-      // toggle the selection combo box to be visible if it has any items
-      comparisonValuesComboBox.setVisible(!comparisonValuesComboBox.getItems().isEmpty());
-      // toggle the text field to be hidden if the combo box is visible, or show it if the combo box is invisible
-      comparisonValuesTextField.setVisible(!comparisonValuesComboBox.isVisible());
     }
+  }
+
+  private void showElement(Control elementToShow) {
+    ArrayList<Control> elements = new ArrayList<>(
+        Arrays.asList(comparisonValuesBooleanComboBox, comparisonValuesNumberField, comparisonValuesChoicesComboBox));
+
+    elements.forEach(element -> element.setVisible(element.equals(elementToShow)));
   }
 
   /**
